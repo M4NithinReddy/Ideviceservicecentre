@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 32% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 224 76% 48%;
+
+    --radius: 0.75rem;
+
+    /* Custom AntiGravity Colors */
+    --glow-blue: 217 100% 60%;
+    --glow-purple: 260 60% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    background-color: #020617;
+    /* Slate 950 base */
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+
+  /* ─── Glassmorphism Cards ─── */
+  .glass-card {
+    @apply bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-500 hover:-translate-y-2 hover:bg-slate-800/50;
+  }
+
+  .glass-card-hover:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 10px 40px -10px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  }
+
+  /* ─── Premium Buttons ─── */
+  .hero-btn-primary {
+    @apply inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold tracking-wide text-slate-900 bg-white rounded-full transition-all duration-300 transform hover:scale-105 hover:bg-slate-50 hover:shadow-lg hover:shadow-white/20;
+  }
+
+  .hero-btn-secondary {
+    @apply inline-flex items-center justify-center px-8 py-3.5 text-sm font-semibold tracking-wide text-white bg-transparent border border-white/20 rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white/40;
+  }
+
+  .glow-button {
+    @apply hero-btn-primary;
+    /* Alias for backward compatibility */
+  }
+
+  /* ─── Typography ─── */
+  .section-heading {
+    @apply text-3xl md:text-5xl font-bold tracking-tight text-white;
+  }
+
+  .section-subheading {
+    @apply text-lg md:text-xl text-slate-400 max-w-2xl mx-auto font-light leading-relaxed;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent;
+  }
+
+  /* ─── Utilities ─── */
+  .glow-divider {
+    @apply w-full h-px border-t border-white/5 bg-gradient-to-r from-transparent via-white/10 to-transparent;
+  }
+
+  .trust-icon-glow {
+    @apply relative flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 transition-transform duration-300;
+  }
+
+  /* ─── Scrollbar Hide ─── */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ─── Animations ─── */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+.play-state-paused {
+  animation-play-state: paused;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.center-glow {
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+/* ─── Solar-System Orbit ─── */
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes counter-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
