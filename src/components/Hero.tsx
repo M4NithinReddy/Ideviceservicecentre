@@ -10,6 +10,7 @@ import {
   ArrowLeft, ArrowRight, ChevronRight, X, ScanFace,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import logo from "../assets/logo.png";
 
 /* ─────────────────────────────────────────────── */
 /*  Types                                          */
@@ -360,14 +361,18 @@ const Hero = () => {
                     className="relative flex-shrink-0"
                     style={{ width: ORBIT_RADIUS * 2 + PLANET_SIZE, height: ORBIT_RADIUS * 2 + PLANET_SIZE }}
                   >
-                    {/* Central sun — perfectly centered, blue circle unchanged */}
+                    {/* Central sun — iD Logo */}
                     <div
                       className="absolute z-20 flex items-center justify-center"
                       style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
                     >
                       <div className="absolute w-48 h-48 bg-blue-600/20 rounded-full blur-3xl animate-pulse" />
-                      <div className="relative w-28 h-28 rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-purple-600 shadow-[0_0_80px_20px_rgba(59,130,246,0.45)]">
-                        <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/30 to-transparent" />
+                      <div className="relative w-28 h-28 rounded-3xl overflow-hidden shadow-[0_0_80px_20px_rgba(59,130,246,0.3)]">
+                        <img 
+                          src={logo} 
+                          alt="iDevice Logo" 
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                     </div>
 
