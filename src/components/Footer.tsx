@@ -1,12 +1,13 @@
 import { MapPin, Phone, Mail } from "lucide-react";
+import logo from "../assets/logo.png";
 
 // Keeping the links structurally but we'll focus on the address layout
 const footerLinks = {
   Services: [
-    { label: "iPhone Repair", href: "#iphone" },
-    { label: "MacBook Repair", href: "#macbook" },
-    { label: "iPad Repair", href: "#ipad" },
-    { label: "Watch Repair", href: "#watch" },
+    { label: "iPhone Repair", device: "iPhone" },
+    { label: "MacBook Repair", device: "MacBook" },
+    { label: "iPad Repair", device: "iPad" },
+    { label: "Watch Repair", device: "Watch" },
   ],
   Support: [
     { label: "Warranty", href: "#" },
@@ -15,6 +16,13 @@ const footerLinks = {
 };
 
 const Footer = () => {
+  const selectDevice = (name: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent("idevice:selectDevice", { detail: name }));
+    const hero = document.getElementById("hero");
+    if (hero) hero.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <footer className="border-t border-border/30 pt-16 pb-10 px-6 bg-slate-950">
       <div className="max-w-7xl mx-auto">
@@ -23,7 +31,12 @@ const Footer = () => {
           {/* Brand & Contact */}
           <div className="space-y-6">
             <div>
-              <h3 className="text-2xl font-bold text-white mb-2">i Device</h3>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                  <img src={logo} alt="iDevice Logo" className="w-full h-full object-cover" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">i Device</h3>
+              </div>
               <p className="text-sm text-slate-400">
                 Premium Apple device repairs in Hyderabad.
               </p>
@@ -94,7 +107,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {footerLinks.Services.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-sm text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                  <a href={`#${link.device.toLowerCase()}`} onClick={(e) => selectDevice(link.device, e)} className="text-sm text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-2 group cursor-pointer">
                     <span className="w-1 h-1 rounded-full bg-slate-600 group-hover:bg-blue-400 transition-colors"></span>
                     {link.label}
                   </a>
