@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a0d05"/>
+      <stop offset="100%" stop-color="#0f0803"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Phone frame/housing -->
+  <rect x="20" y="8" width="24" height="48" rx="7" fill="none" stroke="#f97316" stroke-width="2" filter="url(#glow)"/>
+  <!-- Back panel texture -->
+  <rect x="22" y="10" width="20" height="44" rx="6" fill="#1a0d05" opacity="0.8"/>
+  <!-- Camera module -->
+  <rect x="27" y="14" width="10" height="10" rx="3" fill="#f97316" opacity="0.15" stroke="#f97316" stroke-width="0.8"/>
+  <circle cx="32" cy="19" r="3" fill="#0a0a0a" stroke="#f97316" stroke-width="0.6"/>
+  <circle cx="32" cy="19" r="1.5" fill="#f97316" opacity="0.5"/>
+  <!-- Wrench overlay -->
+  <path d="M36 38 L42 32 A5 5 0 0 0 36 26 L33 29 L38 34 L35 37 L30 32 L27 35 A5 5 0 0 0 33 41 Z" fill="#f97316" opacity="0.85" filter="url(#glow)"/>
+  <!-- Side buttons -->
+  <rect x="44" y="22" width="3" height="8" rx="1.5" fill="#f97316" opacity="0.6"/>
+  <rect x="17" y="24" width="3" height="5" rx="1.5" fill="#f97316" opacity="0.5"/>
+  <rect x="17" y="31" width="3" height="5" rx="1.5" fill="#f97316" opacity="0.5"/>
+  <!-- Home bar -->
+  <rect x="27" y="51" width="10" height="2" rx="1" fill="#f97316" opacity="0.4"/>
+</svg>

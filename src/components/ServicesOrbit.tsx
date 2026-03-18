@@ -1,29 +1,25 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import {
-    Wrench, Droplets, Smartphone, Battery, Camera,
-    Database, Cpu, Zap, ScanFace, Shield,
-    ChevronRight, X, ArrowRight,
-} from "lucide-react";
+import { Wrench, ChevronRight, X, ArrowRight } from "lucide-react";
 import { useOrbitResponsive } from "@/hooks/useOrbitResponsive";
 
 /* ── Inner orbit: Core Expertise ── */
 const coreServices = [
-    { name: "Logic Board", icon: Cpu, color: "#f59e0b", details: ["Micro-Soldering", "Chip-Level Repair", "BGA Reballing", "Power IC Replacement", "NAND Programming"] },
-    { name: "Water Damage", icon: Droplets, color: "#06b6d4", details: ["Ultrasonic Cleaning", "Corrosion Removal", "Board Recovery", "Data Preservation", "Component Swap"] },
-    { name: "Data Recovery", icon: Database, color: "#8b5cf6", details: ["Secure Extraction", "NAND Recovery", "iCloud Bypass", "Encrypted Drive Access", "Deleted File Restore"] },
-    { name: "Diagnostics", icon: Zap, color: "#ef4444", details: ["Full System Scan", "Thermal Profiling", "Battery Analytics", "Component Isolation", "Short Circuit Trace"] },
+    { name: "Logic Board", img: "/icons/logic-board.svg", color: "#f59e0b", details: ["Micro-Soldering", "Chip-Level Repair", "BGA Reballing", "Power IC Replacement", "NAND Programming"] },
+    { name: "Water Damage", img: "/icons/water-damage.svg", color: "#06b6d4", details: ["Ultrasonic Cleaning", "Corrosion Removal", "Board Recovery", "Data Preservation", "Component Swap"] },
+    { name: "Data Recovery", img: "/icons/data-recovery.svg", color: "#8b5cf6", details: ["Secure Extraction", "NAND Recovery", "iCloud Bypass", "Encrypted Drive Access", "Deleted File Restore"] },
+    { name: "Diagnostics", img: "/icons/diagnostics.svg", color: "#ef4444", details: ["Full System Scan", "Thermal Profiling", "Battery Analytics", "Component Isolation", "Short Circuit Trace"] },
 ];
 
 /* ── Outer orbit: Repair Specialties ── */
 const specialties = [
-    { name: "Screen Fix", icon: Smartphone, color: "#3b82f6", details: ["OLED Panel Swap", "LCD Replacement", "Touch Digitizer", "True Tone Calibration", "3D Touch Repair"] },
-    { name: "Battery", icon: Battery, color: "#22c55e", details: ["Cell Replacement", "Health Restore", "Swollen Battery Fix", "Charge Circuit Repair", "Wireless Charging"] },
-    { name: "Camera", icon: Camera, color: "#a855f7", details: ["Rear Lens Repair", "Front Camera Fix", "OIS Module Service", "Flash Replacement", "Sensor Calibration"] },
-    { name: "Face ID", icon: ScanFace, color: "#ec4899", details: ["TrueDepth Camera", "IR Sensor Fix", "Dot Projector Repair", "Proximity Sensor", "Face ID Calibration"] },
-    { name: "Housing", icon: Wrench, color: "#f97316", details: ["Back Glass Swap", "Frame Repair", "Button Replacement", "SIM Tray Fix", "Port Cleaning"] },
-    { name: "Warranty", icon: Shield, color: "#14b8a6", details: ["90-Day Guarantee", "Quality Parts", "Certified Repair", "Free Re-Check", "Priority Support"] },
+    { name: "Screen Fix", img: "/icons/screen-fix.svg", color: "#3b82f6", details: ["OLED Panel Swap", "LCD Replacement", "Touch Digitizer", "True Tone Calibration", "3D Touch Repair"] },
+    { name: "Battery", img: "/icons/battery.svg", color: "#22c55e", details: ["Cell Replacement", "Health Restore", "Swollen Battery Fix", "Charge Circuit Repair", "Wireless Charging"] },
+    { name: "Camera", img: "/icons/camera.svg", color: "#a855f7", details: ["Rear Lens Repair", "Front Camera Fix", "OIS Module Service", "Flash Replacement", "Sensor Calibration"] },
+    { name: "Face ID", img: "/icons/face-id.svg", color: "#ec4899", details: ["TrueDepth Camera", "IR Sensor Fix", "Dot Projector Repair", "Proximity Sensor", "Face ID Calibration"] },
+    { name: "Housing", img: "/icons/housing.svg", color: "#f97316", details: ["Back Glass Swap", "Frame Repair", "Button Replacement", "SIM Tray Fix", "Port Cleaning"] },
+    { name: "Warranty", img: "/icons/warranty.svg", color: "#14b8a6", details: ["90-Day Guarantee", "Quality Parts", "Certified Repair", "Free Re-Check", "Priority Support"] },
 ];
 
 const getCirclePos = (i: number, total: number, r: number) => {
@@ -37,6 +33,39 @@ const NODE_S_B = 50;
 const NODE_R_B = 54;
 
 type ActiveItem = { ring: "core" | "specialty"; index: number } | null;
+
+/* Small image icon component */
+const NodeImg = ({ src, size, active, color }: { src: string; size: number; active: boolean; color: string }) => (
+    <div
+        className="relative flex-shrink-0 rounded-full overflow-hidden"
+        style={{
+            width: size,
+            height: size,
+            boxShadow: active ? `0 0 12px ${color}60` : "none",
+            transition: "box-shadow 0.3s ease",
+        }}
+    >
+        <img
+            src={src}
+            alt=""
+            draggable={false}
+            style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                filter: active ? "none" : "brightness(0.75) saturate(0.8)",
+                transition: "filter 0.3s ease",
+                borderRadius: "50%",
+            }}
+        />
+        {active && (
+            <div
+                className="absolute inset-0 rounded-full"
+                style={{ background: `radial-gradient(circle at 50% 50%, ${color}22 0%, transparent 70%)` }}
+            />
+        )}
+    </div>
+);
 
 const ServicesOrbit = () => {
     const [active, setActive] = useState<ActiveItem>(null);
@@ -65,8 +94,8 @@ const ServicesOrbit = () => {
         else setActive({ ring, index });
     };
 
-    const iconS = Math.max(10, 14 * scale);
-    const iconR = Math.max(11, 15 * scale);
+    const imgS = Math.max(22, 28 * scale);
+    const imgR = Math.max(24, 30 * scale);
     const labelS = Math.max(4.5, 5.5 * scale);
     const labelR = Math.max(5, 6 * scale);
 
@@ -175,7 +204,7 @@ const ServicesOrbit = () => {
                                 style={{ width: NODE_S, height: NODE_S, left: cx + x - NODE_S / 2, top: cy + y - NODE_S / 2, borderColor: isActive ? svc.color : undefined, boxShadow: isActive ? `0 0 20px ${svc.color}30` : "0 0 10px rgba(0,0,0,0.3)" }}
                                 whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${svc.color}20`, transition: { duration: 0.2 } }} whileTap={{ scale: 0.92 }}>
                                 {isActive && <motion.div className="absolute inset-0 rounded-full border" style={{ borderColor: `${svc.color}35` }} animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity }} />}
-                                <svc.icon style={{ color: isActive ? svc.color : "#94a3b8", width: iconS, height: iconS }} strokeWidth={1.5} />
+                                <NodeImg src={svc.img} size={imgS} active={isActive} color={svc.color} />
                                 <span style={{ fontSize: labelS, color: isActive ? svc.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }} className="font-bold tracking-wide leading-none mt-0.5">{svc.name}</span>
                             </motion.button>
                         );
@@ -193,7 +222,7 @@ const ServicesOrbit = () => {
                                 style={{ width: NODE_R, height: NODE_R, left: cx + x - NODE_R / 2, top: cy + y - NODE_R / 2, borderColor: isActive ? spec.color : undefined, boxShadow: isActive ? `0 0 20px ${spec.color}30` : "0 0 10px rgba(0,0,0,0.3)" }}
                                 whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${spec.color}20`, transition: { duration: 0.2 } }} whileTap={{ scale: 0.92 }}>
                                 {isActive && <motion.div className="absolute inset-0 rounded-full border" style={{ borderColor: `${spec.color}35` }} animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity }} />}
-                                <spec.icon style={{ color: isActive ? spec.color : "#94a3b8", width: iconR, height: iconR }} strokeWidth={1.5} />
+                                <NodeImg src={spec.img} size={imgR} active={isActive} color={spec.color} />
                                 <span style={{ fontSize: labelR, color: isActive ? spec.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }} className="font-bold tracking-wide leading-none mt-0.5">{spec.name}</span>
                             </motion.button>
                         );
@@ -219,10 +248,10 @@ const ServicesOrbit = () => {
                                     {active!.ring === "core" ? "⚡ Core Expertise" : "🔧 Repair Specialty"}
                                 </motion.span>
                                 <div className="flex items-center gap-3 mb-4">
-                                    <motion.div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                                    <motion.div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden"
                                         style={{ backgroundColor: `${activeSvc.color}15`, border: `1px solid ${activeSvc.color}25` }}
                                         initial={{ rotate: -90, scale: 0 }} animate={{ rotate: 0, scale: 1 }} transition={{ duration: 0.35, type: "spring", bounce: 0.35 }}>
-                                        <activeSvc.icon style={{ color: activeSvc.color, width: 18, height: 18 }} strokeWidth={1.5} />
+                                        <img src={activeSvc.img} alt={activeSvc.name} className="w-8 h-8 object-cover" />
                                     </motion.div>
                                     <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05, duration: 0.3 }}>
                                         <h4 className="text-white font-bold text-sm sm:text-base" style={{ fontFamily: "'Inter', sans-serif" }}>{activeSvc.name}</h4>

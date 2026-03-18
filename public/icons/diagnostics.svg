@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a0a0a"/>
+      <stop offset="100%" stop-color="#0f0505"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Scan lines -->
+  <line x1="10" y1="18" x2="54" y2="18" stroke="#ef4444" stroke-width="0.5" opacity="0.2"/>
+  <line x1="10" y1="26" x2="54" y2="26" stroke="#ef4444" stroke-width="0.5" opacity="0.2"/>
+  <line x1="10" y1="34" x2="54" y2="34" stroke="#ef4444" stroke-width="0.5" opacity="0.2"/>
+  <line x1="10" y1="42" x2="54" y2="42" stroke="#ef4444" stroke-width="0.5" opacity="0.2"/>
+  <line x1="10" y1="50" x2="54" y2="50" stroke="#ef4444" stroke-width="0.5" opacity="0.2"/>
+  <!-- Scan beam -->
+  <rect x="10" y="30" width="44" height="3" fill="#ef4444" opacity="0.12"/>
+  <!-- Lightning bolt -->
+  <path d="M36 10 L22 34 L30 34 L28 54 L42 30 L34 30 Z" fill="#ef4444" opacity="0.9" filter="url(#glow)"/>
+  <path d="M36 10 L22 34 L30 34 L28 54 L42 30 L34 30 Z" fill="none" stroke="#fca5a5" stroke-width="0.5" opacity="0.5"/>
+  <!-- Corner markers -->
+  <polyline points="10,14 10,10 14,10" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.7"/>
+  <polyline points="54,14 54,10 50,10" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.7"/>
+  <polyline points="10,50 10,54 14,54" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.7"/>
+  <polyline points="54,50 54,54 50,54" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.7"/>
+</svg>

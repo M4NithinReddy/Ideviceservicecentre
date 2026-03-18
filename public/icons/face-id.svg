@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a0812"/>
+      <stop offset="100%" stop-color="#0f0509"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Face outline -->
+  <rect x="16" y="12" width="32" height="40" rx="8" fill="none" stroke="#ec4899" stroke-width="1.2" opacity="0.6"/>
+  <!-- IR dot grid (TrueDepth) -->
+  <circle cx="22" cy="22" r="1.2" fill="#ec4899" opacity="0.8"/>
+  <circle cx="27" cy="20" r="1.2" fill="#ec4899" opacity="0.7"/>
+  <circle cx="32" cy="19" r="1.2" fill="#ec4899" opacity="0.9" filter="url(#glow)"/>
+  <circle cx="37" cy="20" r="1.2" fill="#ec4899" opacity="0.7"/>
+  <circle cx="42" cy="22" r="1.2" fill="#ec4899" opacity="0.8"/>
+  <circle cx="23" cy="27" r="1.2" fill="#ec4899" opacity="0.6"/>
+  <circle cx="28" cy="26" r="1.2" fill="#ec4899" opacity="0.7"/>
+  <circle cx="33" cy="25" r="1.2" fill="#ec4899" opacity="0.8"/>
+  <circle cx="38" cy="26" r="1.2" fill="#ec4899" opacity="0.7"/>
+  <circle cx="43" cy="27" r="1.2" fill="#ec4899" opacity="0.6"/>
+  <!-- Eyes -->
+  <ellipse cx="26" cy="33" rx="3.5" ry="2.5" fill="none" stroke="#f9a8d4" stroke-width="1.2"/>
+  <ellipse cx="38" cy="33" rx="3.5" ry="2.5" fill="none" stroke="#f9a8d4" stroke-width="1.2"/>
+  <circle cx="26" cy="33" r="1.2" fill="#ec4899" opacity="0.9"/>
+  <circle cx="38" cy="33" r="1.2" fill="#ec4899" opacity="0.9"/>
+  <!-- Mouth smile -->
+  <path d="M26 42 Q32 46 38 42" fill="none" stroke="#f9a8d4" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Scan line -->
+  <line x1="16" y1="32" x2="48" y2="32" stroke="#ec4899" stroke-width="0.8" opacity="0.3" stroke-dasharray="2 2"/>
+  <!-- Corner brackets -->
+  <polyline points="10,18 10,12 16,12" fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.7"/>
+  <polyline points="54,18 54,12 48,12" fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.7"/>
+  <polyline points="10,46 10,52 16,52" fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.7"/>
+  <polyline points="54,46 54,52 48,52" fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.7"/>
+</svg>

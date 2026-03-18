@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0f0a1a"/>
+      <stop offset="100%" stop-color="#08050f"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Hard drive body -->
+  <rect x="10" y="20" width="44" height="28" rx="5" fill="#140d24" stroke="#8b5cf6" stroke-width="1.2" filter="url(#glow)"/>
+  <!-- Drive platter -->
+  <circle cx="28" cy="34" r="10" fill="#1a1030" stroke="#8b5cf6" stroke-width="1" opacity="0.8"/>
+  <circle cx="28" cy="34" r="6" fill="#1a1030" stroke="#8b5cf6" stroke-width="0.6" opacity="0.7"/>
+  <circle cx="28" cy="34" r="2.5" fill="#8b5cf6" opacity="0.6"/>
+  <!-- Read arm -->
+  <line x1="34" y1="26" x2="30" y2="34" stroke="#8b5cf6" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="30" cy="34" r="1.2" fill="#a78bfa"/>
+  <!-- Data streams -->
+  <line x1="44" y1="26" x2="54" y2="22" stroke="#8b5cf6" stroke-width="0.8" opacity="0.4" stroke-dasharray="2 2"/>
+  <line x1="44" y1="30" x2="58" y2="28" stroke="#8b5cf6" stroke-width="0.8" opacity="0.5" stroke-dasharray="2 2"/>
+  <line x1="44" y1="34" x2="57" y2="34" stroke="#8b5cf6" stroke-width="0.8" opacity="0.6" stroke-dasharray="2 2"/>
+  <line x1="44" y1="38" x2="58" y2="40" stroke="#8b5cf6" stroke-width="0.8" opacity="0.4" stroke-dasharray="2 2"/>
+  <!-- Glowing dots -->
+  <circle cx="54" cy="22" r="1.5" fill="#a78bfa" opacity="0.8"/>
+  <circle cx="58" cy="28" r="1.5" fill="#8b5cf6" opacity="0.9"/>
+  <circle cx="57" cy="34" r="2" fill="#a78bfa" opacity="1" filter="url(#glow)"/>
+  <circle cx="58" cy="40" r="1.5" fill="#8b5cf6" opacity="0.8"/>
+  <!-- LED -->
+  <circle cx="48" cy="42" r="2" fill="#8b5cf6" opacity="0.9"/>
+</svg>

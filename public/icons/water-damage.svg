@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00111a"/>
+      <stop offset="100%" stop-color="#000d12"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Circuit board lines -->
+  <line x1="10" y1="44" x2="54" y2="44" stroke="#06b6d4" stroke-width="0.8" opacity="0.3"/>
+  <line x1="10" y1="48" x2="42" y2="48" stroke="#06b6d4" stroke-width="0.8" opacity="0.2"/>
+  <rect x="12" y="41" width="8" height="3" rx="1" fill="#06b6d4" opacity="0.25"/>
+  <rect x="24" y="41" width="5" height="3" rx="1" fill="#06b6d4" opacity="0.25"/>
+  <rect x="38" y="41" width="8" height="3" rx="1" fill="#06b6d4" opacity="0.25"/>
+  <!-- Main water drop -->
+  <path d="M32 14 C32 14 20 28 20 36 a12 12 0 0 0 24 0 C44 28 32 14 32 14Z" fill="#06b6d4" opacity="0.25" filter="url(#glow)"/>
+  <path d="M32 14 C32 14 20 28 20 36 a12 12 0 0 0 24 0 C44 28 32 14 32 14Z" fill="none" stroke="#06b6d4" stroke-width="1.5" filter="url(#glow)"/>
+  <!-- Shine -->
+  <ellipse cx="27" cy="30" rx="3" ry="5" fill="white" opacity="0.12" transform="rotate(-20 27 30)"/>
+  <!-- Small drops -->
+  <path d="M14 20 C14 20 11 24 11 26 a3 3 0 0 0 6 0 C17 24 14 20 14 20Z" fill="#06b6d4" opacity="0.5"/>
+  <path d="M50 24 C50 24 47 28 47 30 a3 3 0 0 0 6 0 C53 28 50 24 50 24Z" fill="#06b6d4" opacity="0.4"/>
+  <path d="M22 14 C22 14 20 16.5 20 17.5 a2 2 0 0 0 4 0 C24 16.5 22 14 22 14Z" fill="#06b6d4" opacity="0.35"/>
+</svg>

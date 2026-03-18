@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a0f00"/>
+      <stop offset="100%" stop-color="#0d0800"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Chip body -->
+  <rect x="18" y="18" width="28" height="28" rx="4" fill="#1c1208" stroke="#f59e0b" stroke-width="1.5" filter="url(#glow)"/>
+  <!-- Inner grid -->
+  <rect x="22" y="22" width="20" height="20" rx="2" fill="#f59e0b" opacity="0.08"/>
+  <line x1="28" y1="22" x2="28" y2="42" stroke="#f59e0b" stroke-width="0.5" opacity="0.5"/>
+  <line x1="36" y1="22" x2="36" y2="42" stroke="#f59e0b" stroke-width="0.5" opacity="0.5"/>
+  <line x1="22" y1="28" x2="42" y2="28" stroke="#f59e0b" stroke-width="0.5" opacity="0.5"/>
+  <line x1="22" y1="36" x2="42" y2="36" stroke="#f59e0b" stroke-width="0.5" opacity="0.5"/>
+  <!-- Center logo -->
+  <rect x="26" y="26" width="12" height="12" rx="2" fill="#f59e0b" opacity="0.2"/>
+  <text x="32" y="34" text-anchor="middle" font-size="7" fill="#f59e0b" font-family="monospace" font-weight="bold">IC</text>
+  <!-- Pins left -->
+  <rect x="12" y="22" width="5" height="2" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="12" y="27" width="5" height="2" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="12" y="32" width="5" height="2" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="12" y="37" width="5" height="2" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <!-- Pins right -->
+  <rect x="47" y="22" width="5" height="2" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="47" y="27" width="5" height="2" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="47" y="32" width="5" height="2" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="47" y="37" width="5" height="2" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <!-- Pins top -->
+  <rect x="22" y="12" width="2" height="5" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="27" y="12" width="2" height="5" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="33" y="12" width="2" height="5" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="38" y="12" width="2" height="5" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <!-- Pins bottom -->
+  <rect x="22" y="47" width="2" height="5" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="27" y="47" width="2" height="5" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="33" y="47" width="2" height="5" rx="1" fill="#f59e0b" opacity="0.7"/>
+  <rect x="38" y="47" width="2" height="5" rx="1" fill="#f59e0b" opacity="0.7"/>
+</svg>

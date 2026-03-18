@@ -9,7 +9,7 @@ import {
   Pencil, MonitorDot,
   ArrowLeft, ArrowRight, ChevronRight, X, ScanFace,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 /* ─────────────────────────────────────────────── */
 /*  Types                                          */
@@ -191,6 +191,8 @@ const Hero = () => {
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
   const [activeItem, setActiveItem] = useState<ActiveItem>(null);
   const [isOrbitPaused, setIsOrbitPaused] = useState(false);
+  const [mobileTab, setMobileTab] = useState<"boards" | "parts">("boards");
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   /* Listen for device selection fired from the Navbar Services dropdown */
   useEffect(() => {
@@ -214,7 +216,7 @@ const Hero = () => {
       : devCfg?.replacements[activeItem.index]
     : null;
 
-  const handleDeviceClick = (name: string) => { setSelectedDevice(name); setActiveItem(null); };
+  const handleDeviceClick = (name: string) => { setSelectedDevice(name); setActiveItem(null); setMobileTab("boards"); };
   const handleBack = () => { setSelectedDevice(null); setActiveItem(null); };
   const handleNodeClick = (ring: "service" | "replacement", index: number) => {
     setActiveItem(activeItem?.ring === ring && activeItem?.index === index ? null : { ring, index });
@@ -274,7 +276,8 @@ const Hero = () => {
               style={{ ...gpuStyle, position: "absolute", inset: 0 }}
               className="flex items-center"
             >
-              <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 grid lg:grid-cols-2 gap-12 items-center">
+              {/* ─── DESKTOP OVERVIEW (lg+) ─── */}
+              <div className="hidden lg:grid w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 grid-cols-2 gap-12 items-center">
 
                 {/* ── Left: Hero text ── */}
                 <div className="text-left">
@@ -292,7 +295,7 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-5xl md:text-7xl font-semibold text-white mb-6 leading-[1.1] tracking-tight"
+                    className="text-4xl sm:text-5xl md:text-7xl font-semibold text-white mb-6 leading-[1.1] tracking-tight"
                   >
                     Expert Repair.
                     <br />
@@ -428,21 +431,136 @@ const Hero = () => {
                   </motion.p>
                 </div>
 
-                {/* Mobile: Device buttons grid */}
-                <div className="lg:hidden grid grid-cols-3 gap-3 mt-4">
-                  {categories.map((cat) => (
-                    <motion.button
-                      key={cat.name}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleDeviceClick(cat.name)}
-                      className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm cursor-pointer"
-                    >
-                      <cat.icon style={{ color: cat.color, width: 24, height: 24 }} strokeWidth={1.5} />
-                      <span className="text-xs text-white/70 font-medium">{cat.name}</span>
-                    </motion.button>
-                  ))}
+                {/* Mobile: Rich device card grid */}
+                <div className="lg:hidden mt-6 w-full">
+                  <p className="text-[10px] text-slate-500 uppercase tracking-[0.18em] font-semibold text-center mb-3">Select your device</p>
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {categories.map((cat, idx) => (
+                      <motion.button
+                        key={cat.name}
+                        whileTap={{ scale: 0.93 }}
+                        onClick={() => handleDeviceClick(cat.name)}
+                        className="relative flex flex-col items-center justify-center gap-2 rounded-2xl py-4 px-2 border cursor-pointer overflow-hidden"
+                        style={{ background: `${cat.color}10`, borderColor: `${cat.color}30` }}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.35 + idx * 0.05, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      >
+                        {/* glow blob */}
+                        <div className="absolute inset-0 rounded-2xl" style={{ background: `radial-gradient(circle at 50% 30%, ${cat.color}20 0%, transparent 65%)` }} />
+                        <div
+                          className="relative z-10 w-10 h-10 rounded-xl flex items-center justify-center mb-0.5"
+                          style={{ background: `${cat.color}18`, border: `1px solid ${cat.color}40` }}
+                        >
+                          <cat.icon style={{ color: cat.color, width: 20, height: 20 }} strokeWidth={1.5} />
+                        </div>
+                        <span className="relative z-10 text-xs font-bold text-white/90">{cat.name}</span>
+                        <span className="relative z-10 text-[9px] text-slate-500 font-medium">Tap to explore</span>
+                      </motion.button>
+                    ))}
+                  </div>
                 </div>
+              </div>
+
+              {/* ─── MOBILE OVERVIEW — Immersive Carousel ─── */}
+              <div className="lg:hidden relative flex flex-col overflow-hidden" style={{ minHeight: "100svh" }}>
+
+                {/* ── Top area: headline + badge ── */}
+                <div className="relative z-10 px-5 pt-16 pb-4">
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-4"
+                    style={{ background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.25)" }}
+                  >
+                    <Shield className="w-3 h-3 text-blue-400" />
+                    <span className="text-[10px] text-blue-300 font-semibold tracking-wide">Certified Apple Specialists</span>
+                  </motion.div>
+                  <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.5 }}
+                    className="text-[28px] font-black text-white leading-[1.1] tracking-tight"
+                  >
+                    Expert Repair.<br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-violet-400 to-fuchsia-400">Apple Precision.</span>
+                  </motion.h1>
+                </div>
+
+                {/* ── Fullscreen card carousel ── */}
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.18, duration: 0.5 }}
+                  className="relative z-10 flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-5 pb-3 flex-1"
+                  style={{ scrollPaddingLeft: "20px" }}
+                >
+                  {categories.map((cat, idx) => {
+                    const cfg = deviceData[cat.name];
+                    const totalSvcs = cfg ? cfg.services.length + cfg.replacements.length : 0;
+                    return (
+                      <motion.button
+                        key={cat.name}
+                        whileTap={{ scale: 0.96 }}
+                        onClick={() => handleDeviceClick(cat.name)}
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.22 + idx * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="snap-center flex-shrink-0 relative rounded-[28px] overflow-hidden cursor-pointer flex flex-col"
+                        style={{
+                          width: "76vw",
+                          minHeight: "58vw",
+                          background: `linear-gradient(160deg, ${cat.color}28 0%, rgba(10,12,18,0.95) 70%)`,
+                          border: `1.5px solid ${cat.color}35`,
+                          boxShadow: `0 20px 60px -10px ${cat.color}40, inset 0 1px 0 rgba(255,255,255,0.07)`,
+                        }}
+                      >
+                        {/* ambient glow */}
+                        <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl pointer-events-none"
+                          style={{ background: cat.color, opacity: 0.18, transform: "translate(30%, -30%)" }} />
+                        {/* corner tag */}
+                        <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full text-[9px] font-bold"
+                          style={{ background: `${cat.color}25`, border: `1px solid ${cat.color}40`, color: cat.color }}>
+                          {totalSvcs} Services
+                        </div>
+                        {/* content */}
+                        <div className="relative z-10 flex flex-col items-start justify-end flex-1 p-5">
+                          {/* big icon */}
+                          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5"
+                            style={{ background: `${cat.color}20`, border: `1.5px solid ${cat.color}45`, boxShadow: `0 0 30px ${cat.color}35` }}>
+                            <cat.icon style={{ color: cat.color, width: 30, height: 30 }} strokeWidth={1.4} />
+                          </div>
+                          <div className="text-2xl font-black text-white mb-0.5 tracking-tight">{cat.name}</div>
+                          <div className="text-xs text-slate-500 mb-4">Chip-level & part repairs</div>
+                          <div className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs font-bold text-white"
+                            style={{ background: `${cat.color}30`, border: `1px solid ${cat.color}50` }}>
+                            Explore Services <ArrowRight style={{ width: 12, height: 12 }} />
+                          </div>
+                        </div>
+                      </motion.button>
+                    );
+                  })}
+                  {/* trailing spacer */}
+                  <div className="flex-shrink-0 w-5" />
+                </motion.div>
+
+                {/* ── Swipe hint ── */}
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}
+                  className="relative z-10 text-center text-[10px] text-slate-700 tracking-widest uppercase py-2"
+                >Swipe to browse devices</motion.p>
+
+                {/* ── Stats bar ── */}
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.4 }}
+                  className="relative z-10 mx-5 mb-4 flex rounded-2xl overflow-hidden border border-white/[0.06]"
+                  style={{ background: "rgba(255,255,255,0.025)" }}
+                >
+                  {[{ val: "10k+", label: "Repairs" }, { val: "Same Day", label: "Service" }, { val: "100%", label: "Certified" }].map((s, i) => (
+                    <div key={s.val} className={`flex-1 flex flex-col items-center py-3 gap-0.5 ${i < 2 ? "border-r border-white/[0.06]" : ""}`}>
+                      <span className="text-white font-black text-base">{s.val}</span>
+                      <span className="text-[9px] text-slate-600 uppercase tracking-wider font-semibold">{s.label}</span>
+                    </div>
+                  ))}
+                </motion.div>
+
+                {/* ── Book CTA ── */}
+                <motion.a href="#cta" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }}
+                  className="relative z-10 mx-5 mb-8 flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-sm text-black"
+                  style={{ background: "linear-gradient(135deg, #fff 0%, #e2e8f0 100%)", boxShadow: "0 8px 32px -8px rgba(255,255,255,0.3)" }}
+                >
+                  Book a Free Diagnosis
+                </motion.a>
               </div>
             </motion.div>
           )}
@@ -462,8 +580,8 @@ const Hero = () => {
             >
               <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-6 flex flex-col min-h-screen">
 
-                {/* ── Top bar: Back + Device chips ── */}
-                <div className="flex items-center justify-between pb-3 flex-shrink-0">
+                {/* ── Top bar: Back + Device chips (DESKTOP ONLY) ── */}
+                <div className="hidden lg:flex items-center justify-between pb-3 flex-shrink-0">
                   <button
                     onClick={handleBack}
                     className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm backdrop-blur-md"
@@ -472,6 +590,26 @@ const Hero = () => {
                     All Devices
                   </button>
 
+                  {/* Mobile: horizontal scroll chip row */}
+                  <div className="sm:hidden flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.name}
+                        onClick={() => { handleDeviceClick(cat.name); }}
+                        className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 border"
+                        style={{
+                          backgroundColor: selectedDevice === cat.name ? `${cat.color}20` : "rgba(255,255,255,0.04)",
+                          borderColor: selectedDevice === cat.name ? `${cat.color}50` : "rgba(255,255,255,0.08)",
+                          color: selectedDevice === cat.name ? cat.color : "rgba(255,255,255,0.5)",
+                        }}
+                      >
+                        <cat.icon style={{ width: 12, height: 12 }} strokeWidth={2} />
+                        {cat.name}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Desktop: chip row */}
                   <div className="hidden sm:flex items-center gap-2 flex-wrap justify-end">
                     {categories.map((cat) => (
                       <button
@@ -492,7 +630,7 @@ const Hero = () => {
                 </div>
 
                 {/* ── Main content ── */}
-                <div className="flex-1 flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
+                <div className="hidden lg:flex flex-1 items-center gap-6 lg:gap-10">
 
                   {/* Left: device info or service detail */}
                   <motion.div
@@ -542,7 +680,8 @@ const Hero = () => {
                           </div>
 
                           <p className="text-xs text-slate-600 mb-4 text-center tracking-widest uppercase">
-                            Tap any node in the orbit →
+                            Tap any service below
+                            <span className="hidden lg:inline"> — or a node in the orbit →</span>
                           </p>
 
                           <a
@@ -621,8 +760,8 @@ const Hero = () => {
                     </AnimatePresence>
                   </motion.div>
 
-                  {/* Right: Dual-ring orbit */}
-                  <div className="flex-1 flex items-center justify-center">
+                  {/* ─── DESKTOP: Dual-ring orbit ─── */}
+                  <div className="hidden lg:flex flex-1 items-center justify-center">
                     <motion.div
                       className="relative flex-shrink-0"
                       style={{ width: BOX, height: BOX, willChange: "transform" }}
@@ -758,8 +897,224 @@ const Hero = () => {
                       })}
                     </motion.div>
                   </div>
+                  {/* ─── end desktop orbit ─── */}
                 </div>
               </div>
+
+              {/* ─────────────────────────────────────
+                   MOBILE: Device service page (Tab design)
+              ───────────────────────────────────── */}
+              {devCfg && (
+                <div className="lg:hidden flex flex-col" style={{ minHeight: "100svh" }}>
+
+                  {/* ── TOP HERO (full-width gradient slab) ── */}
+                  <motion.div key={selectedDevice + "-hero"}
+                    initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+                    className="relative overflow-hidden pt-16 pb-5 px-5"
+                    style={{
+                      background: `linear-gradient(150deg, ${devCfg.glowColor.replace('0.15', '0.55')} 0%, rgba(5,6,10,1) 75%)`,
+                    }}
+                  >
+                    {/* ambient blob */}
+                    <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full blur-[70px] pointer-events-none"
+                      style={{ background: devCfg.glowColor, opacity: 0.7 }} />
+
+                    {/* Back row */}
+                    <div className="relative z-10 flex items-center justify-between mb-5">
+                      <button onClick={handleBack}
+                        className="flex items-center gap-2 px-3.5 py-2 rounded-full text-white/60 text-xs font-bold border border-white/[0.1] bg-white/[0.06] backdrop-blur-md">
+                        <ArrowLeft className="w-3.5 h-3.5" /> Back
+                      </button>
+                      {/* Device switcher chips */}
+                      <div className="flex gap-1.5 overflow-x-auto scrollbar-hide max-w-[60%]">
+                        {categories.map((cat) => (
+                          <button key={cat.name} onClick={() => { handleDeviceClick(cat.name); setMobileTab('boards'); }}
+                            className="flex-shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all duration-200"
+                            style={{
+                              background: selectedDevice === cat.name ? `${cat.color}28` : "rgba(255,255,255,0.04)",
+                              borderColor: selectedDevice === cat.name ? `${cat.color}60` : "rgba(255,255,255,0.07)",
+                              color: selectedDevice === cat.name ? cat.color : "rgba(255,255,255,0.3)",
+                            }}>{cat.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Device identity row */}
+                    <div className="relative z-10 flex items-end gap-4">
+                      <motion.div key={selectedDevice + "-ic"}
+                        initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                        transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+                        className="w-20 h-20 rounded-[24px] flex items-center justify-center flex-shrink-0"
+                        style={{
+                          background: `linear-gradient(145deg, ${devCfg.glowColor.replace('0.15', '0.7')}, rgba(10,15,30,0.9))`,
+                          border: `2px solid ${devCfg.innerRingColor}`,
+                          boxShadow: `0 0 50px ${devCfg.glowColor}, inset 0 1px 0 rgba(255,255,255,0.12)`,
+                        }}>
+                        <devCfg.CenterIcon style={{ width: 36, height: 36, color: "white" }} strokeWidth={1.3} />
+                      </motion.div>
+                      <div className="pb-1">
+                        <motion.p key={selectedDevice + "-tl"} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
+                          className={`text-[10px] font-black uppercase tracking-[0.18em] mb-1 text-transparent bg-clip-text bg-gradient-to-r ${devCfg.gradient}`}>
+                          {devCfg.tagline}
+                        </motion.p>
+                        <motion.h2 key={selectedDevice + "-n"} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
+                          className="text-4xl font-black text-white leading-none tracking-tight">
+                          {selectedDevice}
+                        </motion.h2>
+                      </div>
+                    </div>
+
+                    {/* Stats row */}
+                    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }}
+                      className="relative z-10 flex gap-3 mt-5">
+                      {[
+                        { label: `${devCfg.services.length} Board Repairs`, color: devCfg.innerRingColor },
+                        { label: `${devCfg.replacements.length} Part Swaps`, color: devCfg.outerRingColor },
+                        { label: "Same-Day", color: "rgba(255,255,255,0.25)" },
+                      ].map((s) => (
+                        <div key={s.label} className="px-3 py-1.5 rounded-full text-[10px] font-bold text-white/80"
+                          style={{ background: `${s.color}`, border: `1px solid ${s.color}` }}>
+                          {s.label}
+                        </div>
+                      ))}
+                    </motion.div>
+                  </motion.div>
+
+                  {/* ── STICKY TAB BAR ── */}
+                  <div className="sticky top-0 z-30 px-4 py-3 backdrop-blur-2xl border-b border-white/[0.06]"
+                    style={{ background: "rgba(5,6,10,0.9)" }}>
+                    <div className="flex rounded-2xl p-1 gap-1" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                      {([
+                        { key: "boards", label: "Board Repairs", emoji: "⚡" },
+                        { key: "parts", label: "Part Swaps", emoji: "🔧" },
+                      ] as const).map((tab) => (
+                        <button key={tab.key} onClick={() => { setMobileTab(tab.key); setActiveItem(null); }}
+                          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-black transition-all duration-250"
+                          style={{
+                            background: mobileTab === tab.key
+                              ? (tab.key === "boards" ? devCfg.innerRingColor.replace('0.18', '0.8') : devCfg.outerRingColor.replace('0.12', '0.7'))
+                              : "transparent",
+                            color: mobileTab === tab.key ? "white" : "rgba(255,255,255,0.35)",
+                            boxShadow: mobileTab === tab.key ? `0 4px 16px ${devCfg.glowColor}` : "none",
+                          }}>
+                          <span>{tab.emoji}</span> {tab.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ── SERVICE CARDS LIST ── */}
+                  <div className="flex-1 px-4 pt-4 pb-32 flex flex-col gap-3">
+                    <AnimatePresence mode="wait">
+                      {(mobileTab === "boards" ? devCfg.services : devCfg.replacements).map((item, i) => {
+                        const ring = mobileTab === "boards" ? "service" : "replacement";
+                        const isOpen = activeItem?.ring === ring && activeItem?.index === i;
+                        return (
+                          <motion.div key={item.name + selectedDevice + mobileTab}
+                            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                            transition={{ delay: i * 0.05, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                            layout
+                            className="rounded-3xl border overflow-hidden"
+                            style={{
+                              borderColor: isOpen ? `${item.color}55` : "rgba(255,255,255,0.07)",
+                              background: isOpen
+                                ? `linear-gradient(135deg, ${item.color}18 0%, rgba(10,12,18,0.95) 80%)`
+                                : "rgba(255,255,255,0.028)",
+                              boxShadow: isOpen ? `0 8px 40px -8px ${item.color}55` : "none",
+                            }}
+                          >
+                            {/* Card header row */}
+                            <button onClick={() => handleNodeClick(ring, i)}
+                              className="w-full flex items-center gap-4 px-4 py-4 text-left">
+                              {/* icon */}
+                              <div className="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center relative"
+                                style={{
+                                  background: `linear-gradient(135deg, ${item.color}28, ${item.color}10)`,
+                                  border: `1.5px solid ${item.color}40`,
+                                  boxShadow: isOpen ? `0 0 24px ${item.color}50` : "none",
+                                }}>
+                                <item.icon style={{ color: item.color, width: 22, height: 22 }} strokeWidth={1.4} />
+                              </div>
+                              {/* text */}
+                              <div className="flex-1 min-w-0">
+                                <div className="text-base font-black tracking-tight mb-0.5" style={{ color: isOpen ? item.color : "#f1f5f9" }}>
+                                  {item.name}
+                                </div>
+                                {!isOpen && (
+                                  <div className="text-[11px] text-slate-600 font-medium">
+                                    {item.details.slice(0, 2).join(" · ")}
+                                  </div>
+                                )}
+                              </div>
+                              {/* expand indicator */}
+                              <motion.div
+                                animate={{ rotate: isOpen ? 90 : 0, scale: isOpen ? 1.1 : 1 }}
+                                transition={{ duration: 0.2 }}
+                                className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                style={{ background: isOpen ? `${item.color}28` : "rgba(255,255,255,0.04)", border: `1px solid ${isOpen ? item.color + "40" : "rgba(255,255,255,0.07)"}` }}>
+                                <ChevronRight className="w-4 h-4" style={{ color: isOpen ? item.color : "rgba(255,255,255,0.25)" }} />
+                              </motion.div>
+                            </button>
+
+                            {/* Expanded content */}
+                            <AnimatePresence>
+                              {isOpen && (
+                                <motion.div key="exp"
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                  className="overflow-hidden">
+                                  <div className="px-4 pb-5">
+                                    {/* divider */}
+                                    <div className="h-px mb-4" style={{ background: `linear-gradient(to right, ${item.color}40, transparent)` }} />
+                                    {/* details grid */}
+                                    <div className="grid grid-cols-2 gap-2 mb-4">
+                                      {item.details.map((d) => (
+                                        <div key={d} className="flex items-center gap-2 px-3 py-2 rounded-xl"
+                                          style={{ background: `${item.color}0e`, border: `1px solid ${item.color}20` }}>
+                                          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: item.color }} />
+                                          <span className="text-[11px] text-slate-300 font-medium leading-tight">{d}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                    {/* CTA */}
+                                    <a href="#cta"
+                                      className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-sm font-black text-white"
+                                      style={{
+                                        background: `linear-gradient(135deg, ${item.color}55, ${item.color}30)`,
+                                        border: `1.5px solid ${item.color}60`,
+                                        boxShadow: `0 4px 20px ${item.color}40`,
+                                      }}>
+                                      Book {item.name} Repair <ArrowRight className="w-4 h-4" />
+                                    </a>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* ── STICKY BOTTOM CTA ── */}
+                  <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden px-4 pb-8 pt-4"
+                    style={{ background: `linear-gradient(to top, rgba(5,6,10,1) 55%, transparent)` }}>
+                    <a href="#cta"
+                      className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl font-black text-sm text-black active:scale-[0.98] transition-transform"
+                      style={{
+                        background: `linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)`,
+                        boxShadow: `0 0 50px -5px ${devCfg.glowColor.replace('0.15', '0.9')}, 0 4px 16px rgba(0,0,0,0.5)`,
+                      }}>
+                      Book {selectedDevice} Repair <ArrowRight className="w-4 h-4" />
+                    </a>
+                  </div>
+
+                </div>
+              )}
             </motion.div>
           )}
 
