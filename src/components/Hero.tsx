@@ -161,7 +161,7 @@ const categories = [
 
 const ORBIT_RADIUS = 200;
 const ORBIT_DURATION = 40;
-const PLANET_SIZE = 110;
+const PLANET_SIZE = 80;
 
 /* ─────────────────────────────────────────────── */
 /*  Dual-Ring helpers                              */
@@ -173,8 +173,8 @@ const getCirclePos = (i: number, total: number, r: number) => {
 
 const R_INNER = 120;
 const R_OUTER = 195;
-const NODE_S = 84;
-const NODE_R = 90;
+const NODE_S = 60;
+const NODE_R = 60;
 
 type ActiveItem = { ring: "service" | "replacement"; index: number } | null;
 
@@ -368,9 +368,9 @@ const Hero = () => {
                     >
                       <div className="absolute w-48 h-48 bg-blue-600/20 rounded-full blur-3xl animate-pulse" />
                       <div className="relative w-28 h-28 rounded-3xl overflow-hidden shadow-[0_0_80px_20px_rgba(59,130,246,0.3)]">
-                        <img 
-                          src={logo} 
-                          alt="iDevice Logo" 
+                        <img
+                          src={logo}
+                          alt="iDevice Logo"
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -426,10 +426,10 @@ const Hero = () => {
                               >
                                 <cat.icon
                                   className="group-hover:text-white transition-colors mb-1"
-                                  style={{ color: cat.color, width: 52, height: 52 }}
+                                  style={{ color: cat.color, width: 35, height: 35 }}
                                   strokeWidth={1.5}
                                 />
-                                <span className="text-[13px] font-bold text-white/80 tracking-wide group-hover:text-white transition-colors">
+                                <span className="text-[11px] font-bold text-white/80 tracking-wide group-hover:text-white transition-colors">
                                   {cat.name}
                                 </span>
                               </motion.button>
@@ -749,9 +749,9 @@ const Hero = () => {
                                     transition={{ duration: 2, repeat: Infinity }}
                                   />
                                 )}
-                                <svc.icon style={{ color: isActive ? svc.color : "#94a3b8", width: 28, height: 28 }} strokeWidth={1.5} />
-                                <span style={{ fontSize: "10px", color: isActive ? svc.color : "#cbd5e1" }}
-                                  className="font-bold tracking-wide leading-tight mt-1.5 text-center px-1 max-w-[90%] break-words">{svc.name}</span>
+                                <svc.icon style={{ color: isActive ? svc.color : "#94a3b8", width: 22, height: 22 }} strokeWidth={1.5} />
+                                <span style={{ fontSize: "8px", color: isActive ? svc.color : "#cbd5e1" }}
+                                  className="font-bold tracking-wide leading-tight mt-1 text-center px-1 max-w-[95%] break-words">{svc.name}</span>
                               </motion.div>
                             </motion.button>
                           );
@@ -802,9 +802,9 @@ const Hero = () => {
                                     transition={{ duration: 2, repeat: Infinity }}
                                   />
                                 )}
-                                <rep.icon style={{ color: isActive ? rep.color : "#94a3b8", width: 32, height: 32 }} strokeWidth={1.5} />
-                                <span style={{ fontSize: "11px", color: isActive ? rep.color : "#cbd5e1" }}
-                                  className="font-bold tracking-wide leading-tight mt-1.5 text-center px-1 max-w-[90%] break-words">{rep.name}</span>
+                                <rep.icon style={{ color: isActive ? rep.color : "#94a3b8", width: 22, height: 22 }} strokeWidth={1.5} />
+                                <span style={{ fontSize: "8px", color: isActive ? rep.color : "#cbd5e1" }}
+                                  className="font-bold tracking-wide leading-tight mt-1 text-center px-1 max-w-[95%] break-words">{rep.name}</span>
                               </motion.div>
                             </motion.button>
                           );
