@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, Smartphone, Laptop, Tablet, Watch, MonitorDot } from "lucide-react";
-import logo from "../assets/logo.png";
 
 const devices = [
   { name: "iPhone", icon: Smartphone, color: "#3b82f6" },
@@ -76,12 +75,9 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-xl overflow-hidden border border-white/10 group-hover:border-white/30 transition-all">
-            <img src={logo} alt="iDevice Logo" className="w-full h-full object-cover" />
+          <div className="h-10 sm:h-12 w-auto transition-all">
+            <img src="/idevicelogo.jpeg" alt="iDevice Logo" className="h-full w-auto object-contain" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-foreground hidden sm:block">
-            i Device
-          </span>
         </a>
 
         {/* ── Desktop nav ── */}

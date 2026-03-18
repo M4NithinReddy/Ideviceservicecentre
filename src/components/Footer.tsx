@@ -1,5 +1,4 @@
 import { MapPin, Phone, Mail } from "lucide-react";
-import logo from "../assets/logo.png";
 
 // Keeping the links structurally but we'll focus on the address layout
 const footerLinks = {
@@ -32,10 +31,9 @@ const Footer = () => {
           <div className="space-y-6">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                  <img src={logo} alt="iDevice Logo" className="w-full h-full object-cover" />
+                <div className="h-12 sm:h-16 w-auto transition-all">
+                  <img src="/idevicelogo.jpeg" alt="iDevice Logo" className="h-full w-auto object-contain" />
                 </div>
-                <h3 className="text-2xl font-bold text-white">i Device</h3>
               </div>
               <p className="text-sm text-slate-400">
                 Premium Apple device repairs in Hyderabad.
