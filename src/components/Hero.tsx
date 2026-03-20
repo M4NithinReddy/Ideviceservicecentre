@@ -234,24 +234,23 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-screen overflow-hidden bg-[#000000]"
+      className={`relative min-h-screen bg-[#000000] overflow-x-hidden`}
     >
-      {/* Grid pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] opacity-20 pointer-events-none" />
-
-      {/* Ambient orbs — absolute, never affect layout */}
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"
-        style={{ willChange: "transform, opacity" }}
-      />
-      <motion.div
-        animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] pointer-events-none"
-        style={{ willChange: "transform, opacity" }}
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Ambient orbs — absolute, never affect layout */}
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px]"
+          style={{ willChange: "transform, opacity" }}
+        />
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px]"
+          style={{ willChange: "transform, opacity" }}
+        />
+      </div>
 
       {/*
         ┌─────────────────────────────────────────────────────────────┐
@@ -275,10 +274,26 @@ const Hero = () => {
               animate={FADE_IN}
               exit={FADE_OUT}
               transition={FADE_TRANSITION}
-              style={{ ...gpuStyle, position: "absolute", inset: 0 }}
-              className="flex items-center"
+              style={{ ...gpuStyle, position: isMobile ? "relative" : "absolute", inset: isMobile ? undefined : 0 }}
+              className={`flex ${isMobile ? "flex-col" : "lg:items-center"}`}
             >
-              <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 grid lg:grid-cols-2 gap-12 items-center">
+              <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 ${isMobile ? "pt-24 pb-12" : "py-16"} grid lg:grid-cols-2 gap-12 items-center`}>
+
+                {/* Mobile: Device buttons grid */}
+                <div className="lg:hidden grid grid-cols-3 gap-3 mb-10">
+                  {categories.map((cat) => (
+                    <motion.button
+                      key={cat.name}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleDeviceClick(cat.name)}
+                      className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm cursor-pointer"
+                    >
+                      <cat.icon style={{ color: cat.color, width: 48, height: 48 }} strokeWidth={1.5} />
+                      <span className="text-lg text-white/70 font-bold">{cat.name}</span>
+                    </motion.button>
+                  ))}
+                </div>
 
                 {/* ── Left: Hero text ── */}
                 <div className="text-left">
@@ -452,21 +467,7 @@ const Hero = () => {
                   </div>
                 </div>
 
-                {/* Mobile: Device buttons grid */}
-                <div className="lg:hidden grid grid-cols-3 gap-3 mt-4">
-                  {categories.map((cat) => (
-                    <motion.button
-                      key={cat.name}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => handleDeviceClick(cat.name)}
-                      className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm cursor-pointer"
-                    >
-                      <cat.icon style={{ color: cat.color, width: 48, height: 48 }} strokeWidth={1.5} />
-                      <span className="text-lg text-white/70 font-bold">{cat.name}</span>
-                    </motion.button>
-                  ))}
-                </div>
+
               </div>
             </motion.div>
           )}
@@ -481,10 +482,10 @@ const Hero = () => {
               animate={FADE_IN}
               exit={FADE_OUT}
               transition={FADE_TRANSITION}
-              style={{ ...gpuStyle, position: "absolute", inset: 0, overflowY: "auto" }}
+              style={{ ...gpuStyle, position: isMobile ? "relative" : "absolute", inset: isMobile ? undefined : 0 }}
               className="flex flex-col"
             >
-              <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-6 flex flex-col min-h-screen">
+              <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 ${isMobile ? "pt-24 pb-12" : "pt-20 pb-6"} flex flex-col min-h-screen`}>
 
                 {/* ── Top bar: Back + Device chips ── */}
                 <div className="flex items-center justify-between pb-3 flex-shrink-0">
@@ -536,6 +537,7 @@ const Hero = () => {
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.25 }}
                           style={gpuStyle}
+                          className="flex flex-col h-full"
                         >
                           <div className="flex items-center gap-3 mb-4">
                             <div
@@ -565,22 +567,26 @@ const Hero = () => {
                             </div>
                           </div>
 
-                          <p className="text-xs text-slate-600 mb-4 text-center tracking-widest uppercase">
-                            Tap any node in the orbit →
-                          </p>
+                          {!isMobile && (
+                            <>
+                              <p className="text-xs text-slate-600 mb-4 text-center tracking-widest uppercase">
+                                Tap any node in the orbit →
+                              </p>
 
-                          <a
-                            href="#cta"
-                            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold text-white transition-all duration-300 hover:brightness-125 hover:scale-[1.02] active:scale-[0.98]"
-                            style={{ background: devCfg.glowColor, border: `1px solid ${devCfg.innerRingColor}` }}
-                          >
-                            Book {selectedDevice} Repair <ArrowRight className="w-4 h-4" />
-                          </a>
+                              <a
+                                href="#cta"
+                                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold text-white transition-all duration-300 hover:brightness-125 hover:scale-[1.02] active:scale-[0.98]"
+                                style={{ background: devCfg.glowColor, border: `1px solid ${devCfg.innerRingColor}` }}
+                              >
+                                Book {selectedDevice} Repair <ArrowRight className="w-4 h-4" />
+                              </a>
+                            </>
+                          )}
                         </motion.div>
                       )}
 
-                      {/* Service selected: detail panel */}
-                      {activeSvc && (
+                      {/* Service selected: detail panel (desktop only) */}
+                      {!isMobile && activeSvc && (
                         <motion.div
                           key={`detail-${activeSvc.name}`}
                           initial={{ opacity: 0 }}
@@ -664,18 +670,66 @@ const Hero = () => {
                           <div className="grid grid-cols-2 gap-4">
                             {devCfg.services.map((svc, i) => {
                               const isActive = activeItem?.ring === "service" && activeItem.index === i;
+                              
+                              if (isActive) {
+                                return (
+                                  <motion.div
+                                    key={`mob-svc-detail-${svc.name}`}
+                                    layoutId={`svc-${svc.name}`}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="col-span-2 rounded-3xl bg-slate-900 border-2 p-5 relative"
+                                    style={{ borderColor: `${svc.color}40`, boxShadow: `0 0 30px ${svc.color}10` }}
+                                  >
+                                    <button 
+                                      onClick={(e) => { e.stopPropagation(); setActiveItem(null); }}
+                                      className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"
+                                    >
+                                      <X className="w-4 h-4 text-slate-400" />
+                                    </button>
+
+                                    <div className="flex items-center gap-4 mb-6">
+                                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${svc.color}15` }}>
+                                        <svc.icon style={{ color: svc.color, width: 24, height: 24 }} strokeWidth={1.5} />
+                                      </div>
+                                      <div>
+                                        <h4 className="text-white font-bold text-lg">{svc.name}</h4>
+                                        <span className="text-xs text-slate-500 uppercase tracking-wider">{svc.details.length} Repair Types</span>
+                                      </div>
+                                    </div>
+
+                                    <div className="grid gap-2 mb-6">
+                                      {svc.details.map((detail) => (
+                                        <div key={detail} className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.03] border border-white/5">
+                                          <ChevronRight className="w-4 h-4" style={{ color: svc.color }} />
+                                          <span className="text-sm text-slate-300 font-medium">{detail}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+
+                                    <a
+                                      href="#cta"
+                                      className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl text-sm font-bold text-white transition-all active:scale-95"
+                                      style={{ background: `${svc.color}30`, border: `1px solid ${svc.color}40` }}
+                                    >
+                                      Book {svc.name} Repair <ArrowRight className="w-4 h-4" />
+                                    </a>
+                                  </motion.div>
+                                );
+                              }
+
                               return (
-                                <button
+                                <motion.button
                                   key={`mob-svc-${svc.name}`}
+                                  layoutId={`svc-${svc.name}`}
                                   onClick={() => setActiveItem({ ring: "service", index: i })}
-                                  className={`flex flex-col items-center justify-center p-5 rounded-3xl border transition-all duration-300 active:scale-95 ${isActive ? "bg-slate-800 border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "bg-slate-900/60 border-white/5"}`}
-                                  style={isActive ? { borderColor: `${svc.color}50`, boxShadow: `0 0 20px ${svc.color}15` } : {}}
+                                  className="flex flex-col items-center justify-center p-5 rounded-3xl border bg-slate-900/60 border-white/5 transition-all active:scale-95"
                                 >
                                   <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: `${svc.color}15` }}>
                                     <svc.icon style={{ color: svc.color, width: 22, height: 22 }} strokeWidth={1.5} />
                                   </div>
                                   <span className="text-sm font-bold text-slate-200 tracking-wide text-center">{svc.name}</span>
-                                </button>
+                                </motion.button>
                               );
                             })}
                           </div>
@@ -694,21 +748,87 @@ const Hero = () => {
                           <div className="grid grid-cols-2 gap-4">
                             {devCfg.replacements.map((rep, i) => {
                               const isActive = activeItem?.ring === "replacement" && activeItem.index === i;
+
+                              if (isActive) {
+                                return (
+                                  <motion.div
+                                    key={`mob-rep-detail-${rep.name}`}
+                                    layoutId={`rep-${rep.name}`}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="col-span-2 rounded-3xl bg-slate-900 border-2 p-5 relative"
+                                    style={{ borderColor: `${rep.color}40`, boxShadow: `0 0 30px ${rep.color}10` }}
+                                  >
+                                    <button 
+                                      onClick={(e) => { e.stopPropagation(); setActiveItem(null); }}
+                                      className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"
+                                    >
+                                      <X className="w-4 h-4 text-slate-400" />
+                                    </button>
+
+                                    <div className="flex items-center gap-4 mb-6">
+                                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${rep.color}15` }}>
+                                        <rep.icon style={{ color: rep.color, width: 24, height: 24 }} strokeWidth={1.5} />
+                                      </div>
+                                      <div>
+                                        <h4 className="text-white font-bold text-lg">{rep.name}</h4>
+                                        <span className="text-xs text-slate-500 uppercase tracking-wider">{rep.details.length} Replacement Options</span>
+                                      </div>
+                                    </div>
+
+                                    <div className="grid gap-2 mb-6">
+                                      {rep.details.map((detail) => (
+                                        <div key={detail} className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.03] border border-white/5">
+                                          <ChevronRight className="w-4 h-4" style={{ color: rep.color }} />
+                                          <span className="text-sm text-slate-300 font-medium">{detail}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+
+                                    <a
+                                      href="#cta"
+                                      className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl text-sm font-bold text-white transition-all active:scale-95"
+                                      style={{ background: `${rep.color}30`, border: `1px solid ${rep.color}40` }}
+                                    >
+                                      Book {rep.name} Replacement <ArrowRight className="w-4 h-4" />
+                                    </a>
+                                  </motion.div>
+                                );
+                              }
+
                               return (
-                                <button
+                                <motion.button
                                   key={`mob-rep-${rep.name}`}
+                                  layoutId={`rep-${rep.name}`}
                                   onClick={() => setActiveItem({ ring: "replacement", index: i })}
-                                  className={`flex flex-col items-center justify-center p-5 rounded-3xl border transition-all duration-300 active:scale-95 ${isActive ? "bg-slate-800 border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "bg-slate-900/60 border-white/5"}`}
-                                  style={isActive ? { borderColor: `${rep.color}50`, boxShadow: `0 0 20px ${rep.color}15` } : {}}
+                                  className="flex flex-col items-center justify-center p-5 rounded-3xl border bg-slate-900/60 border-white/5 transition-all active:scale-95"
                                 >
                                   <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: `${rep.color}15` }}>
                                     <rep.icon style={{ color: rep.color, width: 22, height: 22 }} strokeWidth={1.5} />
                                   </div>
                                   <span className="text-sm font-bold text-slate-200 tracking-wide text-center">{rep.name}</span>
-                                </button>
+                                </motion.button>
                               );
                             })}
                           </div>
+
+                          {/* Mobile-only bottom CTA */}
+                          {!activeSvc && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="mt-6"
+                            >
+                              <a
+                                href="#cta"
+                                className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl text-base font-bold text-white transition-all active:scale-95 shadow-xl"
+                                style={{ background: devCfg.glowColor, border: `1px solid ${devCfg.innerRingColor}` }}
+                              >
+                                Book {selectedDevice} Repair <ArrowRight className="w-5 h-5" />
+                              </a>
+                            </motion.div>
+                          )}
+
                         </motion.div>
                       </div>
                     ) : (

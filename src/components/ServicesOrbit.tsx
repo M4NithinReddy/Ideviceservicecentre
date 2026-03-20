@@ -71,14 +71,15 @@ const ServicesOrbit = () => {
     const labelR = Math.max(5, 6 * scale);
 
     return (
-        <section ref={ref} className="relative min-h-screen flex flex-col overflow-hidden">
-            {/* Background */}
-            <motion.div className="absolute inset-0 pointer-events-none" initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 1, delay: 0.1 }}>
-                <motion.div className="absolute top-1/4 left-1/3 w-[400px] h-[400px] bg-blue-500/[0.04] rounded-full blur-[120px]"
-                    animate={{ scale: [1, 1.1, 1], x: [0, 20, 0] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }} />
-                <motion.div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-violet-500/[0.04] rounded-full blur-[100px]"
-                    animate={{ scale: [1, 1.12, 1], y: [0, -15, 0] }} transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }} />
-            </motion.div>
+        <section ref={ref} className="relative min-h-screen flex flex-col">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <motion.div className="absolute inset-0" initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 1, delay: 0.1 }}>
+                    <motion.div className="absolute top-1/4 left-1/3 w-[400px] h-[400px] bg-blue-500/[0.04] rounded-full blur-[120px]"
+                        animate={{ scale: [1, 1.1, 1], x: [0, 20, 0] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }} />
+                    <motion.div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-violet-500/[0.04] rounded-full blur-[100px]"
+                        animate={{ scale: [1, 1.12, 1], y: [0, -15, 0] }} transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }} />
+                </motion.div>
+            </div>
 
             {/* Header */}
             <div className="relative z-10 text-center pt-8 pb-1 md:pt-12 md:pb-2 flex-shrink-0 px-4">

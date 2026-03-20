@@ -64,7 +64,7 @@ const AppleWatchRepairSection = () => {
     const labelR = Math.max(4.5, 5.5 * scale);
 
     return (
-        <section id="watch" ref={ref} className="relative min-h-screen flex flex-col overflow-hidden">
+        <section id="watch" ref={ref} className="relative min-h-screen flex flex-col overflow-hidden md:overflow-visible">
             <motion.div className="absolute inset-0 pointer-events-none" initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 1, delay: 0.1 }}>
                 <motion.div className="absolute top-1/3 right-1/4 w-[350px] h-[350px] bg-rose-500/[0.03] rounded-full blur-[120px]"
                     animate={{ scale: [1, 1.1, 1], x: [0, 15, 0] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }} />

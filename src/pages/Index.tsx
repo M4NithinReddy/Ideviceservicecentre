@@ -9,7 +9,7 @@ import SEO from "@/components/SEO";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <SEO 
         title="i Device Apple Service Centre | Best iPhone & MacBook Repair Hyderabad"
         description="Premium Apple device service center in Hyderabad. Expert repairs for iPhone, MacBook, iPad, Apple Watch, and iMac with genuine parts and 6-month warranty. Located in Punjagutta and Kompally."
