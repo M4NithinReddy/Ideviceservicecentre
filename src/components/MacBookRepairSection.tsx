@@ -70,7 +70,7 @@ const MacBookRepairSection = () => {
     const labelR = Math.max(5, 6 * scale);
 
     return (
-        <section id="macbook" ref={ref} className="relative min-h-screen flex flex-col overflow-hidden">
+        <section id="macbook" ref={ref} className="relative min-h-screen flex flex-col overflow-hidden md:overflow-visible">
             {/* Background */}
             <motion.div className="absolute inset-0 pointer-events-none" initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 1, delay: 0.1 }}>
                 <motion.div className="absolute top-1/3 right-1/4 w-[350px] h-[350px] bg-emerald-500/[0.03] rounded-full blur-[120px]"

@@ -65,13 +65,15 @@ const IMacRepairSection = () => {
     const labelR = Math.max(5, 6 * scale);
 
     return (
-        <section id="imac" ref={ref} className="relative min-h-screen flex flex-col overflow-hidden">
-            <motion.div className="absolute inset-0 pointer-events-none" initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 1, delay: 0.1 }}>
-                <motion.div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-sky-500/[0.03] rounded-full blur-[120px]"
-                    animate={{ scale: [1, 1.1, 1], x: [0, 20, 0] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }} />
-                <motion.div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-indigo-500/[0.03] rounded-full blur-[100px]"
-                    animate={{ scale: [1, 1.12, 1], y: [0, 15, 0] }} transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }} />
-            </motion.div>
+        <section id="imac" ref={ref} className="relative min-h-screen flex flex-col">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <motion.div className="absolute inset-0" initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 1, delay: 0.1 }}>
+                    <motion.div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-sky-500/[0.03] rounded-full blur-[120px]"
+                        animate={{ scale: [1, 1.1, 1], x: [0, 20, 0] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }} />
+                    <motion.div className="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-indigo-500/[0.03] rounded-full blur-[100px]"
+                        animate={{ scale: [1, 1.12, 1], y: [0, 15, 0] }} transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }} />
+                </motion.div>
+            </div>
 
             <div className="relative z-10 text-center pt-8 pb-1 md:pt-12 md:pb-2 flex-shrink-0 px-4">
                 <motion.div initial={{ opacity: 0, y: 30, filter: "blur(8px)" }} animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
