@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
+import { useOrbitResponsive } from "@/hooks/useOrbitResponsive";
 
 /* ─────────────────────────────────────────────── */
 /*  Types                                          */
@@ -193,6 +194,7 @@ const Hero = () => {
   const [activeItem, setActiveItem] = useState<ActiveItem>(null);
   const [isOrbitPaused, setIsOrbitPaused] = useState(false);
   const [isDualOrbitPaused, setIsDualOrbitPaused] = useState(false);
+  const { scale, isMobile } = useOrbitResponsive();
 
   /* Listen for device selection fired from the Navbar Services dropdown */
   useEffect(() => {
@@ -206,7 +208,7 @@ const Hero = () => {
   }, []);
 
   const devCfg = selectedDevice ? deviceData[selectedDevice] : null;
-  const BOX = R_OUTER * 2 + NODE_R + 24;
+  const BOX = (R_OUTER * 2 + NODE_R + 24) * scale;
   const cx = BOX / 2;
   const cy = BOX / 2;
 
@@ -643,174 +645,244 @@ const Hero = () => {
                     </AnimatePresence>
                   </motion.div>
 
-                  {/* Right: Dual-ring orbit */}
-                  <div className="flex-1 flex items-center justify-end pr-6">
-                    <motion.div
-                      className="relative flex-shrink-0"
-                      style={{ width: BOX, height: BOX, willChange: "transform" }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.4, delay: 0.08 }}
-                    >
-                      {/* Outer ring */}
-                      <div
-                        className="absolute rounded-full"
-                        style={{ width: R_OUTER * 2, height: R_OUTER * 2, left: cx - R_OUTER, top: cy - R_OUTER, border: `1px solid ${devCfg.outerRingColor}` }}
-                      />
-                      <div
-                        className="absolute rounded-full border border-dashed border-white/[0.03]"
-                        style={{ width: R_OUTER * 2 + 26, height: R_OUTER * 2 + 26, left: cx - R_OUTER - 13, top: cy - R_OUTER - 13 }}
-                      />
-
-                      {/* Inner ring */}
-                      <div
-                        className="absolute rounded-full"
-                        style={{ width: R_INNER * 2, height: R_INNER * 2, left: cx - R_INNER, top: cy - R_INNER, border: `1px solid ${devCfg.innerRingColor}` }}
-                      />
-
-                      {/* Rotating glow */}
-                      <motion.div
-                        className="absolute rounded-full pointer-events-none"
-                        style={{
-                          width: R_OUTER * 2, height: R_OUTER * 2,
-                          left: cx - R_OUTER, top: cy - R_OUTER,
-                          background: `conic-gradient(from 0deg, transparent 0%, ${devCfg.glowColor} 18%, transparent 35%, ${devCfg.outerRingColor} 60%, transparent 80%)`,
-                          willChange: "transform",
-                        }}
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-                      />
-
-                      {/* Center device icon */}
-                      <div
-                        className="absolute z-10 flex flex-col items-center justify-center"
-                        style={{ left: cx - 55, top: cy - 55, width: 110, height: 110 }}
-                      >
+                  {/* Right: Dual-ring orbit OR Grid (Mobile) */}
+                  <div className={`flex-1 flex items-center ${isMobile ? "justify-center w-full" : "justify-end pr-6"}`}>
+                    
+                    {isMobile ? (
+                      /* ── Mobile Layout: Service Grid ── */
+                      <div className="w-full max-w-md space-y-10 pb-10 mt-8">
+                        {/* Services Grid (Inner Ring) */}
                         <motion.div
-                          className="absolute rounded-full blur-3xl"
-                          style={{ width: 140, height: 140, backgroundColor: devCfg.glowColor, willChange: "transform, opacity" }}
-                          animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.8, 0.5] }}
-                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <h3 className="text-[11px] uppercase tracking-[0.25em] font-bold text-slate-500 mb-5 px-1 flex items-center gap-2">
+                             <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: devCfg.innerRingColor }} />
+                             Specialist Services
+                          </h3>
+                          <div className="grid grid-cols-2 gap-4">
+                            {devCfg.services.map((svc, i) => {
+                              const isActive = activeItem?.ring === "service" && activeItem.index === i;
+                              return (
+                                <button
+                                  key={`mob-svc-${svc.name}`}
+                                  onClick={() => setActiveItem({ ring: "service", index: i })}
+                                  className={`flex flex-col items-center justify-center p-5 rounded-3xl border transition-all duration-300 active:scale-95 ${isActive ? "bg-slate-800 border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "bg-slate-900/60 border-white/5"}`}
+                                  style={isActive ? { borderColor: `${svc.color}50`, boxShadow: `0 0 20px ${svc.color}15` } : {}}
+                                >
+                                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: `${svc.color}15` }}>
+                                    <svc.icon style={{ color: svc.color, width: 22, height: 22 }} strokeWidth={1.5} />
+                                  </div>
+                                  <span className="text-sm font-bold text-slate-200 tracking-wide text-center">{svc.name}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+
+                        {/* Replacements Grid (Outer Ring) */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                          <h3 className="text-[11px] uppercase tracking-[0.25em] font-bold text-slate-500 mb-5 px-1 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: devCfg.outerRingColor }} />
+                            Part Replacements
+                          </h3>
+                          <div className="grid grid-cols-2 gap-4">
+                            {devCfg.replacements.map((rep, i) => {
+                              const isActive = activeItem?.ring === "replacement" && activeItem.index === i;
+                              return (
+                                <button
+                                  key={`mob-rep-${rep.name}`}
+                                  onClick={() => setActiveItem({ ring: "replacement", index: i })}
+                                  className={`flex flex-col items-center justify-center p-5 rounded-3xl border transition-all duration-300 active:scale-95 ${isActive ? "bg-slate-800 border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "bg-slate-900/60 border-white/5"}`}
+                                  style={isActive ? { borderColor: `${rep.color}50`, boxShadow: `0 0 20px ${rep.color}15` } : {}}
+                                >
+                                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: `${rep.color}15` }}>
+                                    <rep.icon style={{ color: rep.color, width: 22, height: 22 }} strokeWidth={1.5} />
+                                  </div>
+                                  <span className="text-sm font-bold text-slate-200 tracking-wide text-center">{rep.name}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      </div>
+                    ) : (
+                      /* ── Desktop Layout: Original Dual-ring Orbit ── */
+                      <motion.div
+                        className="relative flex-shrink-0"
+                        style={{ width: BOX, height: BOX, willChange: "transform" }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.4, delay: 0.08 }}
+                      >
+                        {/* Outer ring */}
+                        <div
+                          className="absolute rounded-full"
+                          style={{ width: R_OUTER * 2 * scale, height: R_OUTER * 2 * scale, left: cx - R_OUTER * scale, top: cy - R_OUTER * scale, border: `1px solid ${devCfg.outerRingColor}` }}
                         />
                         <div
-                          className="relative w-24 h-24 rounded-full flex flex-col items-center justify-center border-2"
+                          className="absolute rounded-full border border-dashed border-white/[0.03]"
+                          style={{ width: (R_OUTER * 2 + 26) * scale, height: (R_OUTER * 2 + 26) * scale, left: cx - (R_OUTER + 13) * scale, top: cy - (R_OUTER + 13) * scale }}
+                        />
+
+                        {/* Inner ring */}
+                        <div
+                          className="absolute rounded-full"
+                          style={{ width: R_INNER * 2 * scale, height: R_INNER * 2 * scale, left: cx - R_INNER * scale, top: cy - R_INNER * scale, border: `1px solid ${devCfg.innerRingColor}` }}
+                        />
+
+                        {/* Rotating glow */}
+                        <motion.div
+                          className="absolute rounded-full pointer-events-none"
                           style={{
-                            background: "linear-gradient(135deg, #1e293b, #0f172a)",
-                            borderColor: devCfg.innerRingColor,
-                            boxShadow: `0 0 50px ${devCfg.glowColor}`,
+                            width: R_OUTER * 2 * scale, height: R_OUTER * 2 * scale,
+                            left: cx - R_OUTER * scale, top: cy - R_OUTER * scale,
+                            background: `conic-gradient(from 0deg, transparent 0%, ${devCfg.glowColor} 18%, transparent 35%, ${devCfg.outerRingColor} 60%, transparent 80%)`,
+                            willChange: "transform",
                           }}
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+                        />
+
+                        {/* Center device icon */}
+                        <div
+                          className="absolute z-10 flex flex-col items-center justify-center"
+                          style={{ left: cx - 55 * scale, top: cy - 55 * scale, width: 110 * scale, height: 110 * scale }}
                         >
-                          <devCfg.CenterIcon className="text-white" style={{ width: 40, height: 40 }} strokeWidth={1.5} />
-                          <span className="text-[10px] font-bold text-white/60 tracking-wider mt-1.5">{selectedDevice}</span>
+                          <motion.div
+                            className="absolute rounded-full blur-3xl"
+                            style={{ width: 140 * scale, height: 140 * scale, backgroundColor: devCfg.glowColor, willChange: "transform, opacity" }}
+                            animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.8, 0.5] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                          />
+                          <div
+                            className="relative rounded-full flex flex-col items-center justify-center border-2"
+                            style={{
+                              width: 96 * scale, height: 96 * scale,
+                              background: "linear-gradient(135deg, #1e293b, #0f172a)",
+                              borderColor: devCfg.innerRingColor,
+                              boxShadow: `0 0 50px ${devCfg.glowColor}`,
+                            }}
+                          >
+                            <devCfg.CenterIcon className="text-white" style={{ width: 40 * scale, height: 40 * scale }} strokeWidth={1.5} />
+                            <span style={{ fontSize: 10 * scale }} className="font-bold text-white/60 tracking-wider mt-1.5">{selectedDevice}</span>
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Inner orbit: Services */}
-                      <motion.div
-                        className="absolute inset-0 pointer-events-none"
-                        animate={{ rotate: isDualOrbitPaused ? undefined : 360 }}
-                        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                      >
-                        {devCfg.services.map((svc, i) => {
-                          const { x, y } = getCirclePos(i, devCfg.services.length, R_INNER);
-                          const isActive = activeItem?.ring === "service" && activeItem?.index === i;
-                          return (
-                            <motion.button
-                              key={`svc-${svc.name}`}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ duration: 0.4, delay: 0.2 + i * 0.06 }}
-                              onMouseEnter={() => {
-                                setIsDualOrbitPaused(true);
-                              }}
-                              onMouseLeave={() => setIsDualOrbitPaused(false)}
-                              onClick={() => setActiveItem({ ring: "service", index: i })}
-                              className={`absolute z-20 pointer-events-auto rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer border transition-colors duration-200 ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
-                              style={{
-                                width: NODE_S, height: NODE_S,
-                                left: cx + x - NODE_S / 2, top: cy + y - NODE_S / 2,
-                                borderColor: isActive ? svc.color : undefined,
-                                boxShadow: isActive ? `0 0 20px ${svc.color}40` : "0 0 10px rgba(0,0,0,0.3)",
-                                willChange: "opacity",
-                              }}
-                              whileHover={{ scale: 1.1, transition: { duration: 0.15 } }}
-                              whileTap={{ scale: 0.92 }}
-                            >
-                              <motion.div
-                                animate={{ rotate: isDualOrbitPaused ? undefined : -360 }}
-                                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                                className="flex flex-col items-center justify-center w-full h-full"
+                        {/* Inner orbit: Services */}
+                        <motion.div
+                          className="absolute inset-0 pointer-events-none"
+                          animate={{ rotate: isDualOrbitPaused ? undefined : 360 }}
+                          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                        >
+                          {devCfg.services.map((svc, i) => {
+                            const { x, y } = getCirclePos(i, devCfg.services.length, R_INNER * scale);
+                            const isActive = activeItem?.ring === "service" && activeItem?.index === i;
+                            const nodeS = NODE_S * scale;
+                            return (
+                              <motion.button
+                                key={`svc-${svc.name}`}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.4, delay: 0.2 + i * 0.06 }}
+                                onMouseEnter={() => {
+                                  setIsDualOrbitPaused(true);
+                                }}
+                                onMouseLeave={() => setIsDualOrbitPaused(false)}
+                                onClick={() => setActiveItem({ ring: "service", index: i })}
+                                className={`absolute z-20 pointer-events-auto rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer border transition-colors duration-200 ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
+                                style={{
+                                  width: nodeS, height: nodeS,
+                                  left: cx + x - nodeS / 2, top: cy + y - nodeS / 2,
+                                  borderColor: isActive ? svc.color : undefined,
+                                  boxShadow: isActive ? `0 0 20px ${svc.color}40` : "0 0 10px rgba(0,0,0,0.3)",
+                                  willChange: "opacity",
+                                }}
+                                whileHover={{ scale: 1.1, transition: { duration: 0.15 } }}
+                                whileTap={{ scale: 0.92 }}
                               >
-                                {isActive && (
-                                  <motion.div
-                                    className="absolute inset-0 rounded-full border"
-                                    style={{ borderColor: `${svc.color}40` }}
-                                    animate={{ scale: [1, 1.5, 1], opacity: [0.6, 0, 0.6] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                  />
-                                )}
-                                <svc.icon style={{ color: isActive ? svc.color : "#94a3b8", width: 22, height: 22 }} strokeWidth={1.5} />
-                                <span style={{ fontSize: "8px", color: isActive ? svc.color : "#cbd5e1" }}
-                                  className="font-bold tracking-wide leading-tight mt-1 text-center px-1 max-w-[95%] break-words">{svc.name}</span>
-                              </motion.div>
-                            </motion.button>
-                          );
-                        })}
-                      </motion.div>
+                                <motion.div
+                                  animate={{ rotate: isDualOrbitPaused ? undefined : -360 }}
+                                  transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                                  className="flex flex-col items-center justify-center w-full h-full"
+                                >
+                                  {isActive && (
+                                    <motion.div
+                                      className="absolute inset-0 rounded-full border"
+                                      style={{ borderColor: `${svc.color}40` }}
+                                      animate={{ scale: [1, 1.5, 1], opacity: [0.6, 0, 0.6] }}
+                                      transition={{ duration: 2, repeat: Infinity }}
+                                    />
+                                  )}
+                                  <svc.icon style={{ color: isActive ? svc.color : "#94a3b8", width: 22 * scale, height: 22 * scale }} strokeWidth={1.5} />
+                                  <span style={{ fontSize: 8 * scale, color: isActive ? svc.color : "#cbd5e1" }}
+                                    className="font-bold tracking-wide leading-tight mt-1 text-center px-1 max-w-[95%] break-words">{svc.name}</span>
+                                </motion.div>
+                              </motion.button>
+                            );
+                          })}
+                        </motion.div>
 
-                      {/* Outer orbit: Replacements */}
-                      <motion.div
-                        className="absolute inset-0 pointer-events-none"
-                        animate={{ rotate: isDualOrbitPaused ? undefined : -360 }}
-                        transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-                      >
-                        {devCfg.replacements.map((rep, i) => {
-                          const { x, y } = getCirclePos(i, devCfg.replacements.length, R_OUTER);
-                          const isActive = activeItem?.ring === "replacement" && activeItem?.index === i;
-                          return (
-                            <motion.button
-                              key={`rep-${rep.name}`}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ duration: 0.4, delay: 0.28 + i * 0.05 }}
-                              onMouseEnter={() => {
-                                setIsDualOrbitPaused(true);
-                              }}
-                              onMouseLeave={() => setIsDualOrbitPaused(false)}
-                              onClick={() => setActiveItem({ ring: "replacement", index: i })}
-                              className={`absolute z-20 pointer-events-auto rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer border transition-colors duration-200 ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
-                              style={{
-                                width: NODE_R, height: NODE_R,
-                                left: cx + x - NODE_R / 2, top: cy + y - NODE_R / 2,
-                                borderColor: isActive ? rep.color : undefined,
-                                boxShadow: isActive ? `0 0 35px ${rep.color}30` : "0 10px 25px rgba(0,0,0,0.4)",
-                                willChange: "opacity",
-                              }}
-                              whileHover={{ scale: 1.1, transition: { duration: 0.15 } }}
-                              whileTap={{ scale: 0.92 }}
-                            >
-                              <motion.div
-                                animate={{ rotate: isDualOrbitPaused ? undefined : 360 }}
-                                transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-                                className="flex flex-col items-center justify-center w-full h-full"
+                        {/* Outer orbit: Replacements */}
+                        <motion.div
+                          className="absolute inset-0 pointer-events-none"
+                          animate={{ rotate: isDualOrbitPaused ? undefined : -360 }}
+                          transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                        >
+                          {devCfg.replacements.map((rep, i) => {
+                            const { x, y } = getCirclePos(i, devCfg.replacements.length, R_OUTER * scale);
+                            const isActive = activeItem?.ring === "replacement" && activeItem?.index === i;
+                            const nodeR = NODE_R * scale;
+                            return (
+                              <motion.button
+                                key={`rep-${rep.name}`}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.4, delay: 0.28 + i * 0.05 }}
+                                onMouseEnter={() => {
+                                  setIsDualOrbitPaused(true);
+                                }}
+                                onMouseLeave={() => setIsDualOrbitPaused(false)}
+                                onClick={() => setActiveItem({ ring: "replacement", index: i })}
+                                className={`absolute z-20 pointer-events-auto rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer border transition-colors duration-200 ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
+                                style={{
+                                  width: nodeR, height: nodeR,
+                                  left: cx + x - nodeR / 2, top: cy + y - nodeR / 2,
+                                  borderColor: isActive ? rep.color : undefined,
+                                  boxShadow: isActive ? `0 0 35px ${rep.color}30` : "0 10px 25px rgba(0,0,0,0.4)",
+                                  willChange: "opacity",
+                                }}
+                                whileHover={{ scale: 1.1, transition: { duration: 0.15 } }}
+                                whileTap={{ scale: 0.92 }}
                               >
-                                {isActive && (
-                                  <motion.div
-                                    className="absolute inset-0 rounded-full border"
-                                    style={{ borderColor: `${rep.color}40` }}
-                                    animate={{ scale: [1, 1.5, 1], opacity: [0.6, 0, 0.6] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                  />
-                                )}
-                                <rep.icon style={{ color: isActive ? rep.color : "#94a3b8", width: 22, height: 22 }} strokeWidth={1.5} />
-                                <span style={{ fontSize: "8px", color: isActive ? rep.color : "#cbd5e1" }}
-                                  className="font-bold tracking-wide leading-tight mt-1 text-center px-1 max-w-[95%] break-words">{rep.name}</span>
-                              </motion.div>
-                            </motion.button>
-                          );
-                        })}
+                                <motion.div
+                                  animate={{ rotate: isDualOrbitPaused ? undefined : 360 }}
+                                  transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                                  className="flex flex-col items-center justify-center w-full h-full"
+                                >
+                                  {isActive && (
+                                    <motion.div
+                                      className="absolute inset-0 rounded-full border"
+                                      style={{ borderColor: `${rep.color}40` }}
+                                      animate={{ scale: [1, 1.5, 1], opacity: [0.6, 0, 0.6] }}
+                                      transition={{ duration: 2, repeat: Infinity }}
+                                    />
+                                  )}
+                                  <rep.icon style={{ color: isActive ? rep.color : "#94a3b8", width: 22 * scale, height: 22 * scale }} strokeWidth={1.5} />
+                                  <span style={{ fontSize: 8 * scale, color: isActive ? rep.color : "#cbd5e1" }}
+                                    className="font-bold tracking-wide leading-tight mt-1 text-center px-1 max-w-[95%] break-words">{rep.name}</span>
+                                </motion.div>
+                              </motion.button>
+                            );
+                          })}
+                        </motion.div>
                       </motion.div>
-                    </motion.div>
+                    )}
                   </div>
                 </div>
               </div>

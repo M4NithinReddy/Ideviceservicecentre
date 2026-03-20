@@ -95,110 +95,177 @@ const ServicesOrbit = () => {
             </div>
 
             {/* Interactive area */}
-            <div className={`relative z-10 flex-1 flex ${isMobile ? "flex-col items-center justify-center py-4 gap-4" : "items-center justify-center"} min-h-0 px-4`}>
-                <motion.div className="relative flex-shrink-0" style={{ width: BOX, height: BOX }}
-                    animate={{ x: !isMobile && isOpen ? -180 : 0 }} transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}>
+            <div className={`relative z-10 flex-1 flex ${isMobile ? "flex-col items-center justify-start py-8 gap-8 overflow-y-visible" : "items-center justify-center"} min-h-0 px-4`}>
+                
+                {isMobile ? (
+                    /* ── Mobile Layout: Simple Grid ── */
+                    <div className="w-full max-w-md space-y-10 pb-10">
+                        {/* Core Expertise Grid */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <h3 className="text-[11px] uppercase tracking-[0.25em] font-bold text-slate-500 mb-5 px-1 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                Core Expertise
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                {coreServices.map((svc, i) => {
+                                    const isActive = active?.ring === "core" && active.index === i;
+                                    return (
+                                        <button
+                                            key={`mob-core-${svc.name}`}
+                                            onClick={() => handleClick("core", i)}
+                                            className={`flex flex-col items-center justify-center p-5 rounded-3xl border transition-all duration-300 active:scale-95 ${isActive ? "bg-slate-800 border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.15)]" : "bg-slate-900/60 border-white/5"}`}
+                                        >
+                                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: `${svc.color}15` }}>
+                                                <svc.icon style={{ color: svc.color, width: 22, height: 22 }} strokeWidth={1.5} />
+                                            </div>
+                                            <span className="text-sm font-bold text-slate-200 tracking-wide">{svc.name}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </motion.div>
 
-                    {/* Outer ring */}
-                    <motion.div className="absolute rounded-full" style={{ width: R_OUTER * 2, height: R_OUTER * 2, left: cx - R_OUTER, top: cy - R_OUTER, border: "1px solid rgba(139,92,246,0.12)" }}
-                        initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }} />
-                    <motion.div className="absolute rounded-full border border-dashed border-white/[0.03]"
-                        style={{ width: R_OUTER * 2 + 26 * scale, height: R_OUTER * 2 + 26 * scale, left: cx - R_OUTER - 13 * scale, top: cy - R_OUTER - 13 * scale }}
-                        initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }} />
-
-                    {/* Inner ring */}
-                    <motion.div className="absolute rounded-full" style={{ width: R_INNER * 2, height: R_INNER * 2, left: cx - R_INNER, top: cy - R_INNER, border: "1px solid rgba(59,130,246,0.18)" }}
-                        initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }} />
-
-                    {/* Curved text */}
-                    <motion.svg className="absolute pointer-events-none"
-                        style={{ left: cx - R_OUTER - 15 * scale, top: cy - R_OUTER - 15 * scale, width: (R_OUTER + 15 * scale) * 2, height: (R_OUTER + 15 * scale) * 2 }}
-                        initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 0.6, delay: 0.5 }}>
-                        <defs>
-                            <path id="svc-inner-path" d={`M ${R_OUTER + 15 * scale}, ${R_OUTER + 15 * scale - R_INNER} A ${R_INNER},${R_INNER} 0 1,1 ${R_OUTER + 15 * scale - 0.01}, ${R_OUTER + 15 * scale - R_INNER}`} />
-                            <path id="svc-outer-path" d={`M ${R_OUTER + 15 * scale}, ${15 * scale} A ${R_OUTER},${R_OUTER} 0 1,1 ${R_OUTER + 15 * scale - 0.01}, ${15 * scale}`} />
-                        </defs>
-                        <text><textPath href="#svc-inner-path" startOffset="3%"
-                            style={{ fill: "rgba(59,130,246,0.5)", fontSize: `${Math.max(6, 9 * scale)}px`, fontWeight: 700, letterSpacing: "0.3em", fontFamily: "'Inter', sans-serif" }}>
-                            C · O · R · E  ·  E · X · P · E · R · T · I · S · E
-                        </textPath></text>
-                        <text><textPath href="#svc-outer-path" startOffset="2%"
-                            style={{ fill: "rgba(139,92,246,0.45)", fontSize: `${Math.max(6, 9 * scale)}px`, fontWeight: 700, letterSpacing: "0.3em", fontFamily: "'Inter', sans-serif" }}>
-                            R · E · P · A · I · R  ·  S · P · E · C · I · A · L · T · I · E · S
-                        </textPath></text>
-                    </motion.svg>
-
-                    {/* Rotating glow */}
-                    <motion.div className="absolute rounded-full pointer-events-none"
-                        style={{
-                            width: R_OUTER * 2, height: R_OUTER * 2, left: cx - R_OUTER, top: cy - R_OUTER,
-                            background: "conic-gradient(from 0deg, transparent 0%, rgba(59,130,246,0.06) 18%, transparent 35%, rgba(139,92,246,0.05) 60%, transparent 80%, rgba(168,85,247,0.04) 92%, transparent 100%)"
-                        }}
-                        initial={{ opacity: 0 }} animate={isInView ? { opacity: 1, rotate: 360 } : {}}
-                        transition={{ opacity: { duration: 0.5, delay: 0.3 }, rotate: { duration: 22, repeat: Infinity, ease: "linear", delay: 0.3 } }} />
-
-                    {/* Central core */}
-                    <div className="absolute z-10" style={{ left: cx - 42 * scale, top: cy - 42 * scale }}>
-                        <motion.div initial={{ opacity: 0, scale: 0.6, filter: "blur(6px)" }} animate={isInView ? { opacity: 1, scale: 1, filter: "blur(0px)" } : {}}
-                            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }} className="relative flex flex-col items-center">
-                            <motion.div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[40px]"
-                                style={{ width: 112 * scale, height: 112 * scale, backgroundColor: "rgba(59,130,246,0.1)" }}
-                                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
-                            <div style={{ width: 84 * scale, height: 84 * scale }}
-                                className="rounded-full bg-gradient-to-b from-slate-800 to-slate-900 border-2 border-white/[0.12] shadow-[0_0_40px_rgba(59,130,246,0.12)] flex flex-col items-center justify-center relative">
-                                <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                                    className="absolute inset-0 rounded-full"
-                                    style={{ background: "conic-gradient(from 0deg, transparent 70%, rgba(59,130,246,0.15) 85%, transparent 100%)" }} />
-                                <Wrench style={{ width: 20 * scale, height: 20 * scale }} className="text-blue-400/50 relative z-10" strokeWidth={1.5} />
-                                <span style={{ fontSize: Math.max(4, 6 * scale), fontFamily: "'Inter', sans-serif" }}
-                                    className="font-bold text-white/40 tracking-[0.15em] uppercase mt-1 relative z-10">Repair Core</span>
-                                <AnimatePresence>
-                                    {activeSvc && (
-                                        <motion.span key={activeSvc.name} initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -3 }}
-                                            style={{ fontSize: Math.max(3, 5 * scale), color: activeSvc.color }}
-                                            className="font-bold mt-0.5 relative z-10">{activeSvc.name}</motion.span>
-                                    )}
-                                </AnimatePresence>
+                        {/* Repair Specialties Grid */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                            <h3 className="text-[11px] uppercase tracking-[0.25em] font-bold text-slate-500 mb-5 px-1 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                                Repair Specialties
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                {specialties.map((spec, i) => {
+                                    const isActive = active?.ring === "specialty" && active.index === i;
+                                    return (
+                                        <button
+                                            key={`mob-spec-${spec.name}`}
+                                            onClick={() => handleClick("specialty", i)}
+                                            className={`flex flex-col items-center justify-center p-5 rounded-3xl border transition-all duration-300 active:scale-95 ${isActive ? "bg-slate-800 border-violet-500/50 shadow-[0_0_20px_rgba(139,92,246,0.15)]" : "bg-slate-900/60 border-white/5"}`}
+                                        >
+                                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: `${spec.color}15` }}>
+                                                <spec.icon style={{ color: spec.color, width: 22, height: 22 }} strokeWidth={1.5} />
+                                            </div>
+                                            <span className="text-sm font-bold text-slate-200 tracking-wide">{spec.name}</span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </motion.div>
                     </div>
+                ) : (
+                    /* ── Desktop Layout: Original Orbit ── */
+                    <motion.div className="relative flex-shrink-0" style={{ width: BOX, height: BOX }}
+                        animate={{ x: isOpen ? -180 : 0 }} transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}>
 
-                    {/* Inner orbit: Core */}
-                    {coreServices.map((svc, i) => {
-                        const { x, y } = getCirclePos(i, coreServices.length, R_INNER);
-                        const isActive = active?.ring === "core" && active.index === i;
-                        return (
-                            <motion.button key={`core-${svc.name}`} initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                                transition={{ duration: 0.5, delay: 0.3 + i * 0.06, type: "spring", bounce: 0.25 }}
-                                onClick={() => handleClick("core", i)}
-                                className={`absolute z-20 rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 border ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
-                                style={{ width: NODE_S, height: NODE_S, left: cx + x - NODE_S / 2, top: cy + y - NODE_S / 2, borderColor: isActive ? svc.color : undefined, boxShadow: isActive ? `0 0 20px ${svc.color}30` : "0 0 10px rgba(0,0,0,0.3)" }}
-                                whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${svc.color}20`, transition: { duration: 0.2 } }} whileTap={{ scale: 0.92 }}>
-                                {isActive && <motion.div className="absolute inset-0 rounded-full border" style={{ borderColor: `${svc.color}35` }} animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity }} />}
-                                <svc.icon style={{ color: isActive ? svc.color : "#94a3b8", width: iconS, height: iconS }} strokeWidth={1.5} />
-                                <span style={{ fontSize: labelS, color: isActive ? svc.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }} className="font-bold tracking-wide leading-none mt-0.5">{svc.name}</span>
-                            </motion.button>
-                        );
-                    })}
+                        {/* Outer ring */}
+                        <motion.div className="absolute rounded-full" style={{ width: R_OUTER * 2, height: R_OUTER * 2, left: cx - R_OUTER, top: cy - R_OUTER, border: "1px solid rgba(139,92,246,0.12)" }}
+                            initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }} />
+                        <motion.div className="absolute rounded-full border border-dashed border-white/[0.03]"
+                            style={{ width: R_OUTER * 2 + 26 * scale, height: R_OUTER * 2 + 26 * scale, left: cx - R_OUTER - 13 * scale, top: cy - R_OUTER - 13 * scale }}
+                            initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }} />
 
-                    {/* Outer orbit: Specialties */}
-                    {specialties.map((spec, i) => {
-                        const { x, y } = getCirclePos(i, specialties.length, R_OUTER);
-                        const isActive = active?.ring === "specialty" && active.index === i;
-                        return (
-                            <motion.button key={`spec-${spec.name}`} initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                                transition={{ duration: 0.5, delay: 0.45 + i * 0.05, type: "spring", bounce: 0.25 }}
-                                onClick={() => handleClick("specialty", i)}
-                                className={`absolute z-20 rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 border ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
-                                style={{ width: NODE_R, height: NODE_R, left: cx + x - NODE_R / 2, top: cy + y - NODE_R / 2, borderColor: isActive ? spec.color : undefined, boxShadow: isActive ? `0 0 20px ${spec.color}30` : "0 0 10px rgba(0,0,0,0.3)" }}
-                                whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${spec.color}20`, transition: { duration: 0.2 } }} whileTap={{ scale: 0.92 }}>
-                                {isActive && <motion.div className="absolute inset-0 rounded-full border" style={{ borderColor: `${spec.color}35` }} animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity }} />}
-                                <spec.icon style={{ color: isActive ? spec.color : "#94a3b8", width: iconR, height: iconR }} strokeWidth={1.5} />
-                                <span style={{ fontSize: labelR, color: isActive ? spec.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }} className="font-bold tracking-wide leading-none mt-0.5">{spec.name}</span>
-                            </motion.button>
-                        );
-                    })}
-                </motion.div>
+                        {/* Inner ring */}
+                        <motion.div className="absolute rounded-full" style={{ width: R_INNER * 2, height: R_INNER * 2, left: cx - R_INNER, top: cy - R_INNER, border: "1px solid rgba(59,130,246,0.18)" }}
+                            initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }} />
+
+                        {/* Curved text */}
+                        <motion.svg className="absolute pointer-events-none"
+                            style={{ left: cx - R_OUTER - 15 * scale, top: cy - R_OUTER - 15 * scale, width: (R_OUTER + 15 * scale) * 2, height: (R_OUTER + 15 * scale) * 2 }}
+                            initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 0.6, delay: 0.5 }}>
+                            <defs>
+                                <path id="svc-inner-path" d={`M ${R_OUTER + 15 * scale}, ${R_OUTER + 15 * scale - R_INNER} A ${R_INNER},${R_INNER} 0 1,1 ${R_OUTER + 15 * scale - 0.01}, ${R_OUTER + 15 * scale - R_INNER}`} />
+                                <path id="svc-outer-path" d={`M ${R_OUTER + 15 * scale}, ${15 * scale} A ${R_OUTER},${R_OUTER} 0 1,1 ${R_OUTER + 15 * scale - 0.01}, ${15 * scale}`} />
+                            </defs>
+                            <text><textPath href="#svc-inner-path" startOffset="3%"
+                                style={{ fill: "rgba(59,130,246,0.5)", fontSize: `${Math.max(6, 9 * scale)}px`, fontWeight: 700, letterSpacing: "0.3em", fontFamily: "'Inter', sans-serif" }}>
+                                C · O · R · E  ·  E · X · P · E · R · T · I · S · E
+                            </textPath></text>
+                            <text><textPath href="#svc-outer-path" startOffset="2%"
+                                style={{ fill: "rgba(139,92,246,0.45)", fontSize: `${Math.max(6, 9 * scale)}px`, fontWeight: 700, letterSpacing: "0.3em", fontFamily: "'Inter', sans-serif" }}>
+                                R · E · P · A · I · R  ·  S · P · E · C · I · A · L · T · I · E · S
+                            </textPath></text>
+                        </motion.svg>
+
+                        {/* Rotating glow */}
+                        <motion.div className="absolute rounded-full pointer-events-none"
+                            style={{
+                                width: R_OUTER * 2, height: R_OUTER * 2, left: cx - R_OUTER, top: cy - R_OUTER,
+                                background: "conic-gradient(from 0deg, transparent 0%, rgba(59,130,246,0.06) 18%, transparent 35%, rgba(139,92,246,0.05) 60%, transparent 80%, rgba(168,85,247,0.04) 92%, transparent 100%)"
+                            }}
+                            initial={{ opacity: 0 }} animate={isInView ? { opacity: 1, rotate: 360 } : {}}
+                            transition={{ opacity: { duration: 0.5, delay: 0.3 }, rotate: { duration: 22, repeat: Infinity, ease: "linear", delay: 0.3 } }} />
+
+                        {/* Central core */}
+                        <div className="absolute z-10" style={{ left: cx - 42 * scale, top: cy - 42 * scale }}>
+                            <motion.div initial={{ opacity: 0, scale: 0.6, filter: "blur(6px)" }} animate={isInView ? { opacity: 1, scale: 1, filter: "blur(0px)" } : {}}
+                                transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }} className="relative flex flex-col items-center">
+                                <motion.div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[40px]"
+                                    style={{ width: 112 * scale, height: 112 * scale, backgroundColor: "rgba(59,130,246,0.1)" }}
+                                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} />
+                                <div style={{ width: 84 * scale, height: 84 * scale }}
+                                    className="rounded-full bg-gradient-to-b from-slate-800 to-slate-900 border-2 border-white/[0.12] shadow-[0_0_40px_rgba(59,130,246,0.12)] flex flex-col items-center justify-center relative">
+                                    <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                        className="absolute inset-0 rounded-full"
+                                        style={{ background: "conic-gradient(from 0deg, transparent 70%, rgba(59,130,246,0.15) 85%, transparent 100%)" }} />
+                                    <Wrench style={{ width: 20 * scale, height: 20 * scale }} className="text-blue-400/50 relative z-10" strokeWidth={1.5} />
+                                    <span style={{ fontSize: Math.max(4, 6 * scale), fontFamily: "'Inter', sans-serif" }}
+                                        className="font-bold text-white/40 tracking-[0.15em] uppercase mt-1 relative z-10">Repair Core</span>
+                                    <AnimatePresence>
+                                        {activeSvc && (
+                                            <motion.span key={activeSvc.name} initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -3 }}
+                                                style={{ fontSize: Math.max(3, 5 * scale), color: activeSvc.color }}
+                                                className="font-bold mt-0.5 relative z-10">{activeSvc.name}</motion.span>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            </motion.div>
+                        </div>
+
+                        {/* Inner orbit: Core */}
+                        {coreServices.map((svc, i) => {
+                            const { x, y } = getCirclePos(i, coreServices.length, R_INNER);
+                            const isActive = active?.ring === "core" && active.index === i;
+                            return (
+                                <motion.button key={`core-${svc.name}`} initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                                    transition={{ duration: 0.5, delay: 0.3 + i * 0.06, type: "spring", bounce: 0.25 }}
+                                    onClick={() => handleClick("core", i)}
+                                    className={`absolute z-20 rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 border ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
+                                    style={{ width: NODE_S, height: NODE_S, left: cx + x - NODE_S / 2, top: cy + y - NODE_S / 2, borderColor: isActive ? svc.color : undefined, boxShadow: isActive ? `0 0 20px ${svc.color}30` : "0 0 10px rgba(0,0,0,0.3)" }}
+                                    whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${svc.color}20`, transition: { duration: 0.2 } }} whileTap={{ scale: 0.92 }}>
+                                    {isActive && <motion.div className="absolute inset-0 rounded-full border" style={{ borderColor: `${svc.color}35` }} animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity }} />}
+                                    <svc.icon style={{ color: isActive ? svc.color : "#94a3b8", width: iconS, height: iconS }} strokeWidth={1.5} />
+                                    <span style={{ fontSize: labelS, color: isActive ? svc.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }} className="font-bold tracking-wide leading-none mt-0.5">{svc.name}</span>
+                                </motion.button>
+                            );
+                        })}
+
+                        {/* Outer orbit: Specialties */}
+                        {specialties.map((spec, i) => {
+                            const { x, y } = getCirclePos(i, specialties.length, R_OUTER);
+                            const isActive = active?.ring === "specialty" && active.index === i;
+                            return (
+                                <motion.button key={`spec-${spec.name}`} initial={{ opacity: 0, scale: 0 }} animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                                    transition={{ duration: 0.5, delay: 0.45 + i * 0.05, type: "spring", bounce: 0.25 }}
+                                    onClick={() => handleClick("specialty", i)}
+                                    className={`absolute z-20 rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 border ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
+                                    style={{ width: NODE_R, height: NODE_R, left: cx + x - NODE_R / 2, top: cy + y - NODE_R / 2, borderColor: isActive ? spec.color : undefined, boxShadow: isActive ? `0 0 20px ${spec.color}30` : "0 0 10px rgba(0,0,0,0.3)" }}
+                                    whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${spec.color}20`, transition: { duration: 0.2 } }} whileTap={{ scale: 0.92 }}>
+                                    {isActive && <motion.div className="absolute inset-0 rounded-full border" style={{ borderColor: `${spec.color}35` }} animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 2, repeat: Infinity }} />}
+                                    <spec.icon style={{ color: isActive ? spec.color : "#94a3b8", width: iconR, height: iconR }} strokeWidth={1.5} />
+                                    <span style={{ fontSize: labelR, color: isActive ? spec.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }} className="font-bold tracking-wide leading-none mt-1 text-center px-1 max-w-[95%] break-words">{spec.name}</span>
+                                </motion.button>
+                            );
+                        })}
+                    </motion.div>
+                )}
 
                 {/* Detail panel */}
                 <AnimatePresence>
