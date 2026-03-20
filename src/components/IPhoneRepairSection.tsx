@@ -123,201 +123,266 @@ const IPhoneRepairSection = () => {
             </div>
 
             {/* ── Interactive area ── */}
-            <div className={`relative z-10 flex-1 flex ${isMobile ? "flex-col items-center justify-center py-4 gap-4" : "items-center justify-center"} min-h-0 px-4`}>
+            <div className={`relative z-10 flex-1 flex ${isMobile ? "flex-col items-center justify-start py-8 gap-8 overflow-y-visible" : "items-center justify-center"} min-h-0 px-4`}>
 
-                {/* Orbit group */}
-                <motion.div
-                    className="relative flex-shrink-0"
-                    style={{ width: BOX, height: BOX }}
-                    animate={{ x: !isMobile && isOpen ? -140 : 0 }}
-                    transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-                >
-                    {/* ── Outer orbit ring ── */}
-                    <motion.div
-                        className="absolute rounded-full"
-                        style={{ width: R_OUTER * 2, height: R_OUTER * 2, left: cx - R_OUTER, top: cy - R_OUTER, border: "1px solid rgba(59,130,246,0.12)" }}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    />
-                    <motion.div
-                        className="absolute rounded-full border border-dashed border-white/[0.03]"
-                        style={{ width: R_OUTER * 2 + 26 * scale, height: R_OUTER * 2 + 26 * scale, left: cx - R_OUTER - 13 * scale, top: cy - R_OUTER - 13 * scale }}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                    />
-
-                    {/* ── Inner orbit ring ── */}
-                    <motion.div
-                        className="absolute rounded-full"
-                        style={{ width: R_INNER * 2, height: R_INNER * 2, left: cx - R_INNER, top: cy - R_INNER, border: "1px solid rgba(168,85,247,0.18)" }}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                    />
-
-                    {/* ── Curved text ── */}
-                    <motion.svg
-                        className="absolute pointer-events-none"
-                        style={{ left: cx - R_OUTER - 15 * scale, top: cy - R_OUTER - 15 * scale, width: (R_OUTER + 15 * scale) * 2, height: (R_OUTER + 15 * scale) * 2 }}
-                        initial={{ opacity: 0 }}
-                        animate={isInView ? { opacity: 1 } : {}}
-                        transition={{ duration: 0.6, delay: 0.5 }}
-                    >
-                        <defs>
-                            <path id="iphone-inner-path"
-                                d={`M ${R_OUTER + 15 * scale}, ${R_OUTER + 15 * scale - R_INNER} A ${R_INNER},${R_INNER} 0 1,1 ${R_OUTER + 15 * scale - 0.01}, ${R_OUTER + 15 * scale - R_INNER}`}
-                            />
-                            <path id="iphone-outer-path"
-                                d={`M ${R_OUTER + 15 * scale}, ${15 * scale} A ${R_OUTER},${R_OUTER} 0 1,1 ${R_OUTER + 15 * scale - 0.01}, ${15 * scale}`}
-                            />
-                        </defs>
-                        <text>
-                            <textPath href="#iphone-inner-path" startOffset="5%"
-                                style={{ fill: "rgba(168,85,247,0.5)", fontSize: `${Math.max(6, 9 * scale)}px`, fontWeight: 700, letterSpacing: "0.35em", fontFamily: "'Inter', sans-serif" }}>
-                                S · E · R · V · I · C · E · S
-                            </textPath>
-                        </text>
-                        <text>
-                            <textPath href="#iphone-outer-path" startOffset="2%"
-                                style={{ fill: "rgba(59,130,246,0.45)", fontSize: `${Math.max(6, 9 * scale)}px`, fontWeight: 700, letterSpacing: "0.3em", fontFamily: "'Inter', sans-serif" }}>
-                                R · E · P · L · A · C · E · M · E · N · T · S
-                            </textPath>
-                        </text>
-                    </motion.svg>
-
-                    {/* ── Rotating conic glow ── */}
-                    <motion.div
-                        className="absolute rounded-full pointer-events-none"
-                        style={{
-                            width: R_OUTER * 2, height: R_OUTER * 2,
-                            left: cx - R_OUTER, top: cy - R_OUTER,
-                            background: "conic-gradient(from 0deg, transparent 0%, rgba(168,85,247,0.06) 18%, transparent 35%, rgba(59,130,246,0.05) 60%, transparent 80%, rgba(6,182,212,0.04) 92%, transparent 100%)",
-                        }}
-                        initial={{ opacity: 0 }}
-                        animate={isInView ? { opacity: 1, rotate: 360 } : {}}
-                        transition={{ opacity: { duration: 0.5, delay: 0.3 }, rotate: { duration: 22, repeat: Infinity, ease: "linear", delay: 0.3 } }}
-                    />
-
-                    {/* ── iPhone at center ── */}
-                    <div className="absolute z-10" style={{ left: cx - 22 * scale, top: cy - 40 * scale }}>
+                {isMobile ? (
+                    /* ── Mobile Layout: Simple Grid ── */
+                    <div className="w-full max-w-md space-y-10 pb-10">
+                        {/* Services Grid (Inner Ring) */}
                         <motion.div
-                            initial={{ opacity: 0, y: 35, scale: 0.8, filter: "blur(6px)" }}
-                            animate={isInView ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : {}}
-                            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                            className="relative flex flex-col items-center"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5 }}
                         >
-                            <motion.div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[35px]"
-                                style={{ width: 96 * scale, height: 96 * scale, backgroundColor: "rgba(168,85,247,0.1)" }}
-                                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                            />
-                            <motion.div
-                                animate={isInView ? { y: [0, -5, 0] } : {}}
-                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-                                className="relative"
-                            >
-                                <div style={{ width: 44 * scale, height: 80 * scale, borderRadius: 10 * scale }}
-                                    className="bg-gradient-to-b from-slate-800 to-slate-900 border-2 border-white/[0.12] shadow-[0_0_30px_rgba(168,85,247,0.1)] overflow-hidden relative">
-                                    <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent -skew-x-12"
-                                        initial={{ x: "-100%" }}
-                                        animate={isInView ? { x: "200%" } : {}}
-                                        transition={{ duration: 0.8, delay: 0.6, ease: "easeInOut" }}
-                                    />
-                                    <div style={{ inset: 3 * scale, borderRadius: 7 * scale }}
-                                        className="absolute bg-gradient-to-b from-slate-950 to-slate-900 border border-white/5 flex flex-col items-center justify-center">
-                                        {/* Notch */}
-                                        <div style={{ width: 18 * scale, height: 4 * scale, borderRadius: 2 * scale, top: 2 * scale }}
-                                            className="absolute bg-slate-800" />
-                                        <Smartphone style={{ width: 14 * scale, height: 14 * scale }} className="text-purple-400/40" strokeWidth={1} />
-                                        <span style={{ fontSize: Math.max(4, 6 * scale), fontFamily: "'Inter', sans-serif" }}
-                                            className="font-semibold text-white/40 tracking-[0.1em] uppercase mt-0.5">iPhone</span>
-                                        <AnimatePresence>
-                                            {activeSvc && (
-                                                <motion.div key={activeSvc.name}
-                                                    initial={{ opacity: 0, y: 3 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -3 }}
-                                                    className="mt-0.5 text-center">
-                                                    <span style={{ fontSize: Math.max(3, 4 * scale), color: activeSvc.color }} className="font-bold">{activeSvc.name}</span>
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-                                    </div>
-                                </div>
-                            </motion.div>
+                            <h3 className="text-[11px] uppercase tracking-[0.25em] font-bold text-slate-500 mb-5 px-1 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                                Board-Level Services
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                {iphoneServices.map((svc, i) => {
+                                    const isActive = active?.ring === "service" && active.index === i;
+                                    return (
+                                        <button
+                                            key={`mob-svc-${svc.name}`}
+                                            onClick={() => handleClick("service", i)}
+                                            className={`flex flex-col items-center justify-center p-5 rounded-3xl border transition-all duration-300 active:scale-95 ${isActive ? "bg-slate-800 border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.15)]" : "bg-slate-900/60 border-white/5"}`}
+                                        >
+                                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: `${svc.color}15` }}>
+                                                <svc.icon style={{ color: svc.color, width: 22, height: 22 }} strokeWidth={1.5} />
+                                            </div>
+                                            <span className="text-sm font-bold text-slate-200 tracking-wide">{svc.name}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </motion.div>
+
+                        {/* Replacements Grid (Outer Ring) */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                            <h3 className="text-[11px] uppercase tracking-[0.25em] font-bold text-slate-500 mb-5 px-1 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                                Part Replacements
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                {iphoneReplacements.map((rep, i) => {
+                                    const isActive = active?.ring === "replacement" && active.index === i;
+                                    return (
+                                        <button
+                                            key={`mob-rep-${rep.name}`}
+                                            onClick={() => handleClick("replacement", i)}
+                                            className={`flex flex-col items-center justify-center p-5 rounded-3xl border transition-all duration-300 active:scale-95 ${isActive ? "bg-slate-800 border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.15)]" : "bg-slate-900/60 border-white/5"}`}
+                                        >
+                                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: `${rep.color}15` }}>
+                                                <rep.icon style={{ color: rep.color, width: 22, height: 22 }} strokeWidth={1.5} />
+                                            </div>
+                                            <span className="text-sm font-bold text-slate-200 tracking-wide">{rep.name}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </motion.div>
                     </div>
+                ) : (
+                    /* ── Desktop Layout: Original Orbit ── */
+                    <motion.div
+                        className="relative flex-shrink-0"
+                        style={{ width: BOX, height: BOX }}
+                        animate={{ x: isOpen ? -140 : 0 }}
+                        transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+                    >
+                        {/* ── Outer orbit ring ── */}
+                        <motion.div
+                            className="absolute rounded-full"
+                            style={{ width: R_OUTER * 2, height: R_OUTER * 2, left: cx - R_OUTER, top: cy - R_OUTER, border: "1px solid rgba(59,130,246,0.12)" }}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                            transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        />
+                        <motion.div
+                            className="absolute rounded-full border border-dashed border-white/[0.03]"
+                            style={{ width: R_OUTER * 2 + 26 * scale, height: R_OUTER * 2 + 26 * scale, left: cx - R_OUTER - 13 * scale, top: cy - R_OUTER - 13 * scale }}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                            transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        />
 
-                    {/* ── Inner orbit: Services ── */}
-                    {iphoneServices.map((svc, i) => {
-                        const { x, y } = getCirclePos(i, iphoneServices.length, R_INNER);
-                        const isActive = active?.ring === "service" && active.index === i;
-                        return (
-                            <motion.button
-                                key={`svc-${svc.name}`}
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                                transition={{ duration: 0.5, delay: 0.3 + i * 0.06, type: "spring", bounce: 0.25 }}
-                                onClick={() => handleClick("service", i)}
-                                className={`absolute z-20 rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 border ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
-                                style={{
-                                    width: NODE_S, height: NODE_S,
-                                    left: cx + x - NODE_S / 2, top: cy + y - NODE_S / 2,
-                                    borderColor: isActive ? svc.color : undefined,
-                                    boxShadow: isActive ? `0 0 20px ${svc.color}30` : "0 0 10px rgba(0,0,0,0.3)",
-                                }}
-                                whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${svc.color}20`, transition: { duration: 0.2 } }}
-                                whileTap={{ scale: 0.92 }}
-                            >
-                                {isActive && (
-                                    <motion.div className="absolute inset-0 rounded-full border"
-                                        style={{ borderColor: `${svc.color}35` }}
-                                        animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
-                                        transition={{ duration: 2, repeat: Infinity }} />
-                                )}
-                                <svc.icon style={{ color: isActive ? svc.color : "#94a3b8", width: iconS, height: iconS }} strokeWidth={1.5} />
-                                <span style={{ fontSize: labelS, color: isActive ? svc.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }}
-                                    className="font-bold tracking-wide leading-none mt-0.5">{svc.name}</span>
-                            </motion.button>
-                        );
-                    })}
+                        {/* ── Inner orbit ring ── */}
+                        <motion.div
+                            className="absolute rounded-full"
+                            style={{ width: R_INNER * 2, height: R_INNER * 2, left: cx - R_INNER, top: cy - R_INNER, border: "1px solid rgba(168,85,247,0.18)" }}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                        />
 
-                    {/* ── Outer orbit: Replacements ── */}
-                    {iphoneReplacements.map((rep, i) => {
-                        const { x, y } = getCirclePos(i, iphoneReplacements.length, R_OUTER);
-                        const isActive = active?.ring === "replacement" && active.index === i;
-                        return (
-                            <motion.button
-                                key={`rep-${rep.name}`}
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                                transition={{ duration: 0.5, delay: 0.45 + i * 0.05, type: "spring", bounce: 0.25 }}
-                                onClick={() => handleClick("replacement", i)}
-                                className={`absolute z-20 rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 border ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
-                                style={{
-                                    width: NODE_R, height: NODE_R,
-                                    left: cx + x - NODE_R / 2, top: cy + y - NODE_R / 2,
-                                    borderColor: isActive ? rep.color : undefined,
-                                    boxShadow: isActive ? `0 0 20px ${rep.color}30` : "0 0 10px rgba(0,0,0,0.3)",
-                                }}
-                                whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${rep.color}20`, transition: { duration: 0.2 } }}
-                                whileTap={{ scale: 0.92 }}
+                        {/* ── Curved text ── */}
+                        <motion.svg
+                            className="absolute pointer-events-none"
+                            style={{ left: cx - R_OUTER - 15 * scale, top: cy - R_OUTER - 15 * scale, width: (R_OUTER + 15 * scale) * 2, height: (R_OUTER + 15 * scale) * 2 }}
+                            initial={{ opacity: 0 }}
+                            animate={isInView ? { opacity: 1 } : {}}
+                            transition={{ duration: 0.6, delay: 0.5 }}
+                        >
+                            <defs>
+                                <path id="iphone-inner-path"
+                                    d={`M ${R_OUTER + 15 * scale}, ${R_OUTER + 15 * scale - R_INNER} A ${R_INNER},${R_INNER} 0 1,1 ${R_OUTER + 15 * scale - 0.01}, ${R_OUTER + 15 * scale - R_INNER}`}
+                                />
+                                <path id="iphone-outer-path"
+                                    d={`M ${R_OUTER + 15 * scale}, ${15 * scale} A ${R_OUTER},${R_OUTER} 0 1,1 ${R_OUTER + 15 * scale - 0.01}, ${15 * scale}`}
+                                />
+                            </defs>
+                            <text>
+                                <textPath href="#iphone-inner-path" startOffset="5%"
+                                    style={{ fill: "rgba(168,85,247,0.5)", fontSize: `${Math.max(6, 9 * scale)}px`, fontWeight: 700, letterSpacing: "0.35em", fontFamily: "'Inter', sans-serif" }}>
+                                    S · E · R · V · I · C · E · S
+                                </textPath>
+                            </text>
+                            <text>
+                                <textPath href="#iphone-outer-path" startOffset="2%"
+                                    style={{ fill: "rgba(59,130,246,0.45)", fontSize: `${Math.max(6, 9 * scale)}px`, fontWeight: 700, letterSpacing: "0.3em", fontFamily: "'Inter', sans-serif" }}>
+                                    R · E · P · L · A · C · E · M · E · N · T · S
+                                </textPath>
+                            </text>
+                        </motion.svg>
+
+                        {/* ── Rotating conic glow ── */}
+                        <motion.div
+                            className="absolute rounded-full pointer-events-none"
+                            style={{
+                                width: R_OUTER * 2, height: R_OUTER * 2,
+                                left: cx - R_OUTER, top: cy - R_OUTER,
+                                background: "conic-gradient(from 0deg, transparent 0%, rgba(168,85,247,0.06) 18%, transparent 35%, rgba(59,130,246,0.05) 60%, transparent 80%, rgba(6,182,212,0.04) 92%, transparent 100%)",
+                            }}
+                            initial={{ opacity: 0 }}
+                            animate={isInView ? { opacity: 1, rotate: 360 } : {}}
+                            transition={{ opacity: { duration: 0.5, delay: 0.3 }, rotate: { duration: 22, repeat: Infinity, ease: "linear", delay: 0.3 } }}
+                        />
+
+                        {/* ── iPhone at center ── */}
+                        <div className="absolute z-10" style={{ left: cx - 22 * scale, top: cy - 40 * scale }}>
+                            <motion.div
+                                initial={{ opacity: 0, y: 35, scale: 0.8, filter: "blur(6px)" }}
+                                animate={isInView ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : {}}
+                                transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                                className="relative flex flex-col items-center"
                             >
-                                {isActive && (
-                                    <motion.div className="absolute inset-0 rounded-full border"
-                                        style={{ borderColor: `${rep.color}35` }}
-                                        animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
-                                        transition={{ duration: 2, repeat: Infinity }} />
-                                )}
-                                <rep.icon style={{ color: isActive ? rep.color : "#94a3b8", width: iconR, height: iconR }} strokeWidth={1.5} />
-                                <span style={{ fontSize: labelR, color: isActive ? rep.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }}
-                                    className="font-bold tracking-wide leading-none mt-0.5">{rep.name}</span>
-                            </motion.button>
-                        );
-                    })}
-                </motion.div>
+                                <motion.div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[35px]"
+                                    style={{ width: 96 * scale, height: 96 * scale, backgroundColor: "rgba(168,85,247,0.1)" }}
+                                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                                />
+                                <motion.div
+                                    animate={isInView ? { y: [0, -5, 0] } : {}}
+                                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                                    className="relative"
+                                >
+                                    <div style={{ width: 44 * scale, height: 80 * scale, borderRadius: 10 * scale }}
+                                        className="bg-gradient-to-b from-slate-800 to-slate-900 border-2 border-white/[0.12] shadow-[0_0_30px_rgba(168,85,247,0.1)] overflow-hidden relative">
+                                        <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent -skew-x-12"
+                                            initial={{ x: "-100%" }}
+                                            animate={isInView ? { x: "200%" } : {}}
+                                            transition={{ duration: 0.8, delay: 0.6, ease: "easeInOut" }}
+                                        />
+                                        <div style={{ inset: 3 * scale, borderRadius: 7 * scale }}
+                                            className="absolute bg-gradient-to-b from-slate-950 to-slate-900 border border-white/5 flex flex-col items-center justify-center">
+                                            {/* Notch */}
+                                            <div style={{ width: 18 * scale, height: 4 * scale, borderRadius: 2 * scale, top: 2 * scale }}
+                                                className="absolute bg-slate-800" />
+                                            <Smartphone style={{ width: 14 * scale, height: 14 * scale }} className="text-purple-400/40" strokeWidth={1} />
+                                            <span style={{ fontSize: Math.max(4, 6 * scale), fontFamily: "'Inter', sans-serif" }}
+                                                className="font-semibold text-white/40 tracking-[0.1em] uppercase mt-0.5">iPhone</span>
+                                            <AnimatePresence>
+                                                {activeSvc && (
+                                                    <motion.div key={activeSvc.name}
+                                                        initial={{ opacity: 0, y: 3 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0, y: -3 }}
+                                                        className="mt-0.5 text-center">
+                                                        <span style={{ fontSize: Math.max(3, 4 * scale), color: activeSvc.color }} className="font-bold">{activeSvc.name}</span>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        </div>
+
+                        {/* ── Inner orbit: Services ── */}
+                        {iphoneServices.map((svc, i) => {
+                            const { x, y } = getCirclePos(i, iphoneServices.length, R_INNER);
+                            const isActive = active?.ring === "service" && active.index === i;
+                            return (
+                                <motion.button
+                                    key={`svc-${svc.name}`}
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                                    transition={{ duration: 0.5, delay: 0.3 + i * 0.06, type: "spring", bounce: 0.25 }}
+                                    onClick={() => handleClick("service", i)}
+                                    className={`absolute z-20 rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 border ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
+                                    style={{
+                                        width: NODE_S, height: NODE_S,
+                                        left: cx + x - NODE_S / 2, top: cy + y - NODE_S / 2,
+                                        borderColor: isActive ? svc.color : undefined,
+                                        boxShadow: isActive ? `0 0 20px ${svc.color}30` : "0 0 10px rgba(0,0,0,0.3)",
+                                    }}
+                                    whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${svc.color}20`, transition: { duration: 0.2 } }}
+                                    whileTap={{ scale: 0.92 }}
+                                >
+                                    {isActive && (
+                                        <motion.div className="absolute inset-0 rounded-full border"
+                                            style={{ borderColor: `${svc.color}35` }}
+                                            animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
+                                            transition={{ duration: 2, repeat: Infinity }} />
+                                    )}
+                                    <svc.icon style={{ color: isActive ? svc.color : "#94a3b8", width: iconS, height: iconS }} strokeWidth={1.5} />
+                                    <span style={{ fontSize: labelS, color: isActive ? svc.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }}
+                                        className="font-bold tracking-wide leading-none mt-0.5">{svc.name}</span>
+                                </motion.button>
+                            );
+                        })}
+
+                        {/* ── Outer orbit: Replacements ── */}
+                        {iphoneReplacements.map((rep, i) => {
+                            const { x, y } = getCirclePos(i, iphoneReplacements.length, R_OUTER);
+                            const isActive = active?.ring === "replacement" && active.index === i;
+                            return (
+                                <motion.button
+                                    key={`rep-${rep.name}`}
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                                    transition={{ duration: 0.5, delay: 0.45 + i * 0.05, type: "spring", bounce: 0.25 }}
+                                    onClick={() => handleClick("replacement", i)}
+                                    className={`absolute z-20 rounded-full backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 border ${isActive ? "bg-slate-800" : "bg-slate-900/80 border-white/10 hover:border-white/20 hover:bg-slate-800/80"}`}
+                                    style={{
+                                        width: NODE_R, height: NODE_R,
+                                        left: cx + x - NODE_R / 2, top: cy + y - NODE_R / 2,
+                                        borderColor: isActive ? rep.color : undefined,
+                                        boxShadow: isActive ? `0 0 20px ${rep.color}30` : "0 0 10px rgba(0,0,0,0.3)",
+                                    }}
+                                    whileHover={{ scale: 1.15, boxShadow: `0 0 20px ${rep.color}20`, transition: { duration: 0.2 } }}
+                                    whileTap={{ scale: 0.92 }}
+                                >
+                                    {isActive && (
+                                        <motion.div className="absolute inset-0 rounded-full border"
+                                            style={{ borderColor: `${rep.color}35` }}
+                                            animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
+                                            transition={{ duration: 2, repeat: Infinity }} />
+                                    )}
+                                    <rep.icon style={{ color: isActive ? rep.color : "#94a3b8", width: iconR, height: iconR }} strokeWidth={1.5} />
+                                    <span style={{ fontSize: labelR, color: isActive ? rep.color : "#cbd5e1", fontFamily: "'Inter', sans-serif" }}
+                                        className="font-bold tracking-wide leading-none mt-0.5">{rep.name}</span>
+                                </motion.button>
+                            );
+                        })}
+                    </motion.div>
+                )}
 
                 {/* ── Detail panel ── */}
                 <AnimatePresence>
