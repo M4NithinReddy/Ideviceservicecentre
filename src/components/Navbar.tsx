@@ -1,18 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, Smartphone, Laptop, Tablet, Watch, MonitorDot } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const devices = [
-  { name: "iPhone", icon: Smartphone, color: "#3b82f6" },
-  { name: "MacBook", icon: Laptop, color: "#10b981" },
-  { name: "iPad", icon: Tablet, color: "#a855f7" },
-  { name: "Watch", icon: Watch, color: "#f43f5e" },
-  { name: "iMac", icon: MonitorDot, color: "#0ea5e9" },
+  { name: "iPhone", icon: Smartphone, color: "#3b82f6", path: "/iphone-repair-hyderabad" },
+  { name: "MacBook", icon: Laptop, color: "#10b981", path: "/macbook-repair-hyderabad" },
+  { name: "iPad", icon: Tablet, color: "#a855f7", path: "/ipad-repair-hyderabad" },
+  { name: "Watch", icon: Watch, color: "#f43f5e", path: "/apple-watch-repair-hyderabad" },
+  { name: "iMac", icon: MonitorDot, color: "#0ea5e9", path: "/imac-repair-hyderabad" },
 ];
 
 const staticLinks = [
-  { label: "Why Us", href: "#trust" },
-  { label: "Contact", href: "#cta" },
+  { label: "Why Us", href: "/#trust" },
+  { label: "Contact", href: "/#cta" },
 ];
 
 const Navbar = () => {
@@ -22,6 +23,8 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   /* ── Scroll behaviour ── */
   useEffect(() => {
@@ -52,14 +55,18 @@ const Navbar = () => {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  /* ── Select a device: fire event + scroll to hero ── */
-  const selectDevice = (name: string) => {
-    window.dispatchEvent(new CustomEvent("idevice:selectDevice", { detail: name }));
+  /* ── Select a device: navigate to page or fire event ── */
+  const selectDevice = (name: string, path: string) => {
     setServicesOpen(false);
     setMobileOpen(false);
-    // Scroll hero into view
-    const hero = document.getElementById("hero");
-    if (hero) hero.scrollIntoView({ behavior: "smooth" });
+    
+    if (location.pathname === "/") {
+        window.dispatchEvent(new CustomEvent("idevice:selectDevice", { detail: name }));
+        const hero = document.getElementById("hero");
+        if (hero) hero.scrollIntoView({ behavior: "smooth" });
+    } else {
+        navigate(path);
+    }
   };
 
   return (
@@ -74,14 +81,22 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-2 group">
+        <Link to="/" className="flex items-center gap-2 group">
           <div className="h-10 sm:h-12 w-auto transition-all">
             <img src="/idevicelogo.jpeg" alt="iDevice Logo" className="h-full w-auto object-contain" />
           </div>
-        </a>
+        </Link>
 
         {/* ── Desktop nav ── */}
         <div className="hidden md:flex items-center gap-1">
+
+          {/* Home Link */}
+          <Link
+            to="/"
+            className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all duration-200"
+          >
+            Home
+          </Link>
 
           {/* Services dropdown */}
           <div ref={dropdownRef} className="relative">
@@ -113,8 +128,8 @@ const Navbar = () => {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      onClick={() => selectDevice(dev.name)}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-150"
+                      onClick={() => selectDevice(dev.name, dev.path)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-150 text-left"
                     >
                       <dev.icon
                         style={{ color: dev.color, width: 15, height: 15 }}
@@ -139,7 +154,7 @@ const Navbar = () => {
             </a>
           ))}
 
-          <a href="#cta" className="hero-btn-primary ml-2 !text-sm !px-6 !py-2.5">
+          <a href="/#cta" className="hero-btn-primary ml-2 !text-sm !px-6 !py-2.5">
             Book Diagnosis
           </a>
         </div>
@@ -167,6 +182,15 @@ const Navbar = () => {
           >
             <div className="px-6 py-8 flex flex-col gap-1">
 
+              {/* Home Link Mobile */}
+              <Link
+                to="/"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 text-xl font-light text-foreground py-3.5 border-b border-border/30 hover:text-primary transition-colors text-left"
+              >
+                Home
+              </Link>
+
               {/* Services heading + device list */}
               <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold px-2 py-3">
                 Services
@@ -177,7 +201,7 @@ const Navbar = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  onClick={() => selectDevice(dev.name)}
+                  onClick={() => selectDevice(dev.name, dev.path)}
                   className="flex items-center gap-3 text-xl font-light text-foreground py-3.5 border-b border-border/30 hover:text-primary transition-colors text-left"
                 >
                   <dev.icon style={{ color: dev.color, width: 20, height: 20 }} strokeWidth={1.5} />
@@ -203,7 +227,7 @@ const Navbar = () => {
               </div>
 
               <motion.a
-                href="#cta"
+                href="/#cta"
                 onClick={() => setMobileOpen(false)}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

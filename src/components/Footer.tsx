@@ -1,25 +1,34 @@
 import { MapPin, Phone, Mail } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 // Keeping the links structurally but we'll focus on the address layout
 const footerLinks = {
   Services: [
-    { label: "iPhone Repair", device: "iPhone" },
-    { label: "MacBook Repair", device: "MacBook" },
-    { label: "iPad Repair", device: "iPad" },
-    { label: "Watch Repair", device: "Watch" },
+    { label: "iPhone Repair", device: "iPhone", path: "/iphone-repair-hyderabad" },
+    { label: "MacBook Repair", device: "MacBook", path: "/macbook-repair-hyderabad" },
+    { label: "iPad Repair", device: "iPad", path: "/ipad-repair-hyderabad" },
+    { label: "Apple Watch Repair", device: "Watch", path: "/apple-watch-repair-hyderabad" },
+    { label: "iMac Repair", device: "iMac", path: "/imac-repair-hyderabad" },
   ],
   Support: [
-    { label: "Warranty", href: "#" },
-    { label: "Status", href: "#" },
+    { label: "Warranty", href: "/#trust" },
+    { label: "Status", href: "/#cta" },
   ],
 };
 
 const Footer = () => {
-  const selectDevice = (name: string, e: React.MouseEvent) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+  const handleServiceClick = (name: string, path: string, e: React.MouseEvent) => {
     e.preventDefault();
-    window.dispatchEvent(new CustomEvent("idevice:selectDevice", { detail: name }));
-    const hero = document.getElementById("hero");
-    if (hero) hero.scrollIntoView({ behavior: "smooth" });
+    if (location.pathname === "/") {
+        window.dispatchEvent(new CustomEvent("idevice:selectDevice", { detail: name }));
+        const hero = document.getElementById("hero");
+        if (hero) hero.scrollIntoView({ behavior: "smooth" });
+    } else {
+        navigate(path);
+    }
   };
 
   return (
@@ -30,13 +39,13 @@ const Footer = () => {
           {/* Brand & Contact */}
           <div className="space-y-6">
             <div>
-              <div className="flex items-center gap-3 mb-4">
+              <Link to="/" className="flex items-center gap-3 mb-4">
                 <div className="h-12 sm:h-16 w-auto transition-all">
                   <img src="/idevicelogo.jpeg" alt="iDevice Logo" className="h-full w-auto object-contain" />
                 </div>
-              </div>
+              </Link>
               <p className="text-sm text-slate-400">
-                Premium Apple device repairs in Hyderabad.
+                Premium Apple device repairs in Hyderabad. Best service for iPhone, MacBook, iPad and more.
               </p>
             </div>
             <div className="flex flex-col gap-3">
@@ -105,10 +114,13 @@ const Footer = () => {
             <ul className="space-y-3">
               {footerLinks.Services.map((link) => (
                 <li key={link.label}>
-                  <a href={`#${link.device.toLowerCase()}`} onClick={(e) => selectDevice(link.device, e)} className="text-sm text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-2 group cursor-pointer">
+                  <button 
+                    onClick={(e) => handleServiceClick(link.device, link.path, e)} 
+                    className="text-sm text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-2 group cursor-pointer text-left"
+                  >
                     <span className="w-1 h-1 rounded-full bg-slate-600 group-hover:bg-blue-400 transition-colors"></span>
                     {link.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -120,7 +132,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
           <p className="text-xs text-slate-600">
-            © 2026 i Device. All rights reserved.
+            © 2026 i Device Apple Service Centre. All rights reserved. Professional Apple repairs in Hyderabad.
           </p>
           <div className="flex gap-6">
             {["Twitter", "Instagram", "LinkedIn"].map((social) => (
